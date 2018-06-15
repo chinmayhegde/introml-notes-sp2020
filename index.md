@@ -12,3 +12,7 @@ website using
 Test link:
 
 - [Overview](pages/overview.html)
+
+- [Lecture 1](pages/lecture1_notes.html)
+
+- [Lecture 2](pages/lecture2_notes.html)
