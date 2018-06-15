@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Notes
+title: Tech Notes
 description: Technical notes, summaries, et al.
 ---
 
@@ -8,12 +8,6 @@ description: Technical notes, summaries, et al.
 website using
 [Markdown](https://daringfireball.net/projects/markdown/) and
 [git](https://git-scm.com).
-
-For me, the painful aspects of making a website are
-
-- Working with html and css
-- Finding a hosting site
-- Transferring stuff to the hosting site
 
 Test link:
 
