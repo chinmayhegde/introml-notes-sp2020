@@ -3,12 +3,14 @@ _ECE-GY 6143, Spring 2020_
 # Stochastic Gradient Descent
 
 Recall that in the previous lecture, we derived a very simple iterative algorithm to solve linear regression: Gradient descent (GD). We showed that if the step size is chosen carefully, the parameter estimates at the $k^{th}$ iteration satisfy:
+
 $$
 \|w_{k+1} - w^* \| \leq \left(\frac{L-l}{L+l}\right)^k \|w_1 - w^* \| = \rho^k \|w_1 - w^* \|,
 $$
+
 where $l, L$ are the smallest and the largest eigenvalues of the (unnormalized) data covariance matrix $X^T X$.
 
-So, takeaway points:
+Key takeaway points:
 
   1. Gradient descent converges very quickly to the right answer
 
