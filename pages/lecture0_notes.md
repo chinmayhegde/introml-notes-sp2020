@@ -1,14 +1,5 @@
-_ECE 6143 / Spring 2020_
 
-# Lecture 0: Introduction
-
-## Agenda
-
-- Course overview
-- Why machine learning?
-- What this course is (not) about
-
-## Overview
+# Introduction
 
 This course serves as an introduction to a **variety** of machine learning topics both from a **theoretical** and **applied** perspective.
 

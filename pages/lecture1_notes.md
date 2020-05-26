@@ -1,6 +1,4 @@
-_ECE-GY 6143, Spring 2020_
-
-# Lecture 1: Vector representations of data
+# Vector representations of data
 
 In several (most?) applications, "data" usually refers to a list of numerical attributes associated with an object of interest.
 
@@ -28,30 +26,42 @@ Here are some examples of vector space models for data:
 Recall the two fundamental properties of vector spaces:
 
 * Linearity: two vectors $x = (x_1, \ldots, x_d)$ and $y = (y_1, \ldots, y_d)$ can be *added* to obtain:
+
 $$x + y = (x_1 + y_1, \ldots, x_d + y_d).$$
 
 * Scaling: a vector $x = (x_1, \ldots, x_d)$ can be scaled by a real number $\alpha \in \mathbb{R}$ to obtain:
+
 $$\alpha x = (\alpha x_1, \ldots, \alpha x_d).$$
 
 Vector space representations of data are surprisingly general and powerful. Moreover, several tools from linear algebra/Cartesian geometry will be very useful to us:
 
-  1. Norms. Each vector can be associated with a *norm*, loosely interpreted as the "length" of a vector. For example, the $\ell_2$, or *Euclidean*, norm of $x = (x_1, \ldots, x_d)$ is given by $\|x\|_2 = \sqrt{\sum_{i=1}^d x_i^2}$. The $\ell_1$, or *Manhattan*, norm of $x$ is given by  $\|x\|_1 = \sum_{i=1}^d |x|_i$.
+  1. Norms. Each vector can be associated with a *norm*, loosely interpreted as the "length" of a vector. For example, the $\ell_2$, or *Euclidean*, norm of $x = (x_1, \ldots, x_d)$ is given by
+
+  $$||x||^{}_2 = \sqrt{\sum_{i=1}^d x_i^2}$$.
+
+  On the other hand, the $\ell_1$, or *Manhattan*, norm of $x$ is given by  $\|x\|^{}_1 = \sum_{i=1}^d |x|^{}_i$.
 
   2. Distances. Vector spaces can be endowed with a notion of distance as follows: the "distance" between $x$ and $y$ can be interpreted as the norm of the vector $x-y$. For example, the $\ell_2$, or Euclidean, distance between $x$ and $y$ is given by:
+
   $$\|x-y\|_2 = \sqrt{\sum_{i=1}^d (x_i - y_i)^2}.$$
+
   One can similarly define the $\ell_1$-distance, etc. The choice of distance will be crucial in several applications when we wish to compare how close two vectors are.
 
   3. Similarities. (These are, in some sense, the opposite of distance.) Define the Euclidean *inner product* between vectors $x$ and $y$ as:
+
   $$\langle x, y \rangle = \sum_{i=1}^d x_i y_i.$$
+
   Then, the *cosine* similarity is given by:
+
   $$\text{sim}(x,y) =  \frac{\langle x, y \rangle}{\|x\|_2 \|y\|_2}.$$
+
   The _inverse cosine_ of this quantity is the generalized notion of *angle* between $x$ and $y$.
 
 ## Application: Document search
 
 Let us instantiate these ideas for a concrete warmup application in text processing. For the purpose of this discussion, let a *document* refer to any collection of words in the English language. This could be a (literal) document, or a webpage, or a book, or just a search phrase, etc. We consider the following
 
-> Problem: Given a dataset of $n$ documents $\mathcal{D} = \{D_1, D_2, \ldots, D_n\}$ and a query document $D^*$, find the document in the database that best matches $D^*$.
+> Problem: Given a dataset of $n$ documents $\mathcal{D} = \{D_1, D_2, \ldots, D_n\}$ and a query document $D_0$, find the document in the database that best matches $D_0$.
 
 For example, if you were to build a simple querying engine over a database of webpages, $\mathcal{D}$ is your webpage database, and any set of input keywords can be your query "document".
 
