@@ -29,9 +29,11 @@ As a first attempt, we can remove (all) sensitive attributes so that our classif
 However, this may not be enough! For example, race/age may be strongly correlated with zip code (for example, it could be a locality with lots of senior homes, or with folks from a specific community). So even if we do not look at a particular attribute, due to the strong statistical correlations between attributes our decisions may be end up biased anyway!
 
 As a second attempt, we can aim for *statistical parity*. This means that if we have two groups of people $A$ and $B$, the same percentage get the loans. This can be formulated in terms of statistical independence and conditional probabilities:  
+
 $$
 \text{Prob}(\text{Loan = True} | \text{group =} A) = \text{Prob}(\text{Loan = True} | \text{group =} B).
 $$
+
 Mathematically, this means that the $\text{Loan}$ variable is statistically independent of the conditional variable encoding the group index.
 
 This seems intuitive, and many methods for obtaining statistically fair classifiers exist. Unfortunately, statistical parity can be problematic too. (What if $80 \%$ of group A are capable of actually repaying the loan but only $60 \%$ of group B can?) More generally, there are fundamental  
