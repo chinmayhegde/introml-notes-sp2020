@@ -121,7 +121,7 @@ for all $x \in \mathbb{R}^n$.
 * As a consequence of the above two facts, for any matrix $A$ and any vector $x$, we have:
 
 $$
-\| (I - \alpha A) x \|_2 \leq \max(|1 - \alpha l|, |1 - \alpha L|) \|x\|_2
+\| (I - \alpha A) x \|^{}_2 \leq \max(|1 - \alpha l|, |1 - \alpha L|) \|x\|^{}_2
 $$
 
 Let us call this **Fact 1**.
@@ -132,7 +132,7 @@ $$
 \nabla L(w_1) - \nabla L(w_2) = X^T X (w_1 - w_2) .
 $$
 
-Let all norms below denote the Euclidean norm. Suppose that the optimal $w$ is denoted as $w^*$; by definition, the gradient vanishes here and $\nabla L(w^*) = 0$. Suppose $l$ and $L$ are the minimum and maximum eigenvalues of $X^T X$. Since $X^T X$ is psd, they both are non-negative.
+Let all norms below denote the Euclidean norm. Suppose that the optimal $w$ is denoted as $w_{}^*$; by definition, the gradient vanishes here and $\nabla L(w^*) = 0$. Suppose $l$ and $L$ are the minimum and maximum eigenvalues of $X^T X$. Since $X^T X$ is psd, they both are non-negative.
 
 Then, consider the estimation error at iteration $k+1$:
 
