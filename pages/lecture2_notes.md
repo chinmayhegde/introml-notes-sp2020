@@ -1,86 +1,131 @@
----
-layout: page
-title: Lecture 2
-description: lecture 2 notes
----
+_ECE-GY 6143, Spring 2020_
 
-## Setup
+# Regression
 
-We discussed a simple document retrieval system using TF-IDF as the feature representation of the data, and cosine similarity as the measure of "goodness".
-This lecture, we will generalize this algorithm into something that we call as the *Nearest Neighbor* method.
+Suppose we have observed data-label pairs $\{(x_1,y_1),(x_2,y_2),\ldots,(x_n,y_n)\}$ and there is some (unknown) functional relationship between $x_i$ and $y_i$. We will assume the label $y_i$ can be any real number. The problem of *regression* is to discover a function $f$ such that $y_i \approx f(x_i)$. (Later, we will study a special case known as *binary classification*, where the labels are assumed to be $\pm 1$). The hope is that once such a function $f$ is discovered, then for a *new*, so-far-unseen data point $x$, we can simply apply $f$ to $x$ to predict its label.
 
-## The Nearest Neighbor Method
+Examples include:
 
-Suppose that we have a database of data points $\{x_1, x_2, \ldots, x_n\} \subset \mathbb{R}^d$, and a query data point $x_0 \in \mathbb{R}^d$. Also suppose that we are given a distance measure $d(\cdot,\cdot)$ that measures closeness between data points. Typical choice of distances $d(\cdot,\cdot)$ include the $\ell_2-$distance (or $\ell_1$-distance).
+* predicting stock prices ($y$) from econometric data such as quarterly revenue ($x$)
+* predicting auto mileage ($y$) from vehicle features such as weight ($x$). We have introduced this as a class lab exercise.
+* forecasting Uber passenger demand ($y$) from population density ($x$) for a given city block
+* ... and many others.
 
-The nearest neighbor (NN) method advocates the following (intuitive) method for finding the closest point in the database to the query.
+Thinking about it a little bit, we quickly realize that this, of course, is an ill-posed problem --- there is an infinity of such functions $f$ that can be constructed! (Can you reason about why this is the case?) To make the problem well-defined, we need to restrict the space of *possible* functions from which $f$ can arise. This is called the *hypothesis class*.
 
-  1. Compute distances $d_i = d(x_i, x_0)$ for $i = 1,2,\ldots, n$.
+## Simple linear regression
 
-  2. Output $i^* = \arg \min_{i \in [n]} d(x_i, x_0)$.
+As our simplest hypothesis class, we assume a *linear* model on the function (i.e., the label $y_i$ is a linear function of the data $x_i$).
 
-Particularly simple! The above two steps form a core building block of several, more complicated techniques.
+Why linearity? For starters, linear models are simple to understand and interpret and intuitively explain to someone else. ("If I double some quantity, some other quantity doubles too..")
 
-## Efficiency of nearest neighbors
+Linear models are also (relatively) easy from a computation standpoint. We will analytically derive below examples of linear models for a given training dataset in closed form.
 
-The NN method makes no assumptions on the distribution of the data points and can be generically applied; that's part of the reason why it is so powerful.
+Finally, if we recall the concept of *Taylor series expansions*, functions that arise in natural applications can often be locally expressed as linear functions. We will make this idea precise in later lectures.
 
-To process each given query point, the algorithm needs to compute distances from the query to $n$-points in $d$ dimensions; for $\ell_1$ or $\ell_2$ distances, each distance calculation has a running time of $O(d)$, giving rise to an overall running time of $O(nd)$.
+## Univariate regression
 
-This is generally OK for small $n$ (number of samples) or small $d$ (dimension), but quickly becomes very large. Think of $n$ being in the $10^8-10^9$ range, and $d$ being of a similar order of magnitude. This is very common in image retrieval and similar applications.
+Let us start super simple and assume that both data and labels are scalars (such as the horsepower-mpg example shown in class.)  We have observed data-label pairs $\{(x_1,y_1),(x_2,y_2),\ldots,(x_n,y_n)\}$. We need to figure out a linear model $f$ that maps $x$ to $y$.
 
-Moreover: this is the running time incurred for *each* new query. It is typical to possess one large (training) database of points and make repeated queries to this set. The question now is whether we can improve running time if we were allowed to do some type of preprocessing to the database to speed up running time of finding the nearest neighbor.
+As explained in Lecture 1, many ML problems involve a three-step solution. First, we need a *representation* for the data model. Then, we need a *measure of goodness* that tells us how well our model is serving us. Lastly, we need an *algorithm* that produces the best-possible model.
 
-## Improving running time: the 1D case
+The first step is the representation. Since we have assumed a linear model, mathematically this translates to:
 
-Consider the one-dimensional case ($d=1$). Here, the data points (and query) are all scalars. The running time of naive nearest neighbors is O(n). Can we improve upon this?
+$$
+y = w_0 + w_1 x .
+$$
 
-Yes! The idea is to use a divide-and-conquer strategy.
+The second step in solving regression problems is to define a suitable *loss function* with respect to the model parameters, and then discover the model that minimizes the loss. A model with zero loss can perfectly predict the training data; a model with high loss is considered to be poor.
 
-Suppose the data points are given by $\{x_1, x_2, \ldots, x_n\}$. We *sort* the data points in increasing order to obtain the (permuted version of the) data set $\{x_{\pi_1}, x_{\pi_2},\ldots, x_{\pi_n}\}$. This takes $O(n \log n)$ time using MergeSort, etc.
+The most common loss function is the *mean-squared-error* loss, or the MSE:
+$$
+\begin{aligned}
+MSE &= \frac{1}{n} \sum_{i=1}^n (y_i - f(x_i))^2 \\
+&= \frac{1}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i)]^2 .
+\end{aligned}
+$$
+Geometrically speaking, one can interpret $w_1$ to be the "slope" and $w_0$ to be the "intercept".
 
-Now, for each query point $x_0$, we simply perform *binary search*. More concretely: assuming that $n$ is even, we compare $x_0$ to the median point. $x_{\pi_{n/2}}$. If $x_0 > x_{\pi_{n/2}}$, then the nearest neighbor to $x_0$ cannot belong to the bottom half $\{x_1, \ldots, x_{\pi_{n/2-1}}\}$. Else, if $x_0 < x_{\pi_{n/2}}$, then the nearest neighbor cannot belong to the top half $\{x_{\pi_{n/2+1}}, \ldots, x_{\pi_n}\}$. Either way, this discards half the number of points from the database. We recursively apply this procedure on the remaining data points.
 
-Eventually, we will be left with a single data point $x_{j}$. We output $i^* =  \pi^{-1}{j}$ as the index of the nearest neighbor in the (original) database.
+Note that there is nothing sacred about the MSE and there can be other loss-functions too! Later, we will encounter something called the *logistic* loss, which will lead to a technique known as logistic regression. But for now let us remain simple.
 
-Since the dataset size decreases by a factor 2 at each recursive step, the number of iterations is at most $\log_2 n$. Therefore, the running time of nearest neighbors for each query is $O(\log n)$.
+The third step is an algorithm to produce the *best* model. Since we are dealing with scalars, this answer can be obtained using ordinary calculus. Viewing MSE as a function of $w_0$ and $w_1$, the minimum MSE is attained when the (partial) derivative of the MSE with respect to $w_0$, as well as with respect to $w_1$, equal zero, giving us the equations:
+$$
+\begin{aligned}
+\frac{\partial MSE}{\partial w_0} = 0,&~\frac{\partial MSE}{\partial w_1} = 0 .
+\end{aligned}
+$$
+From the first equations, we get the optimal value of $w_0$ by calculating:
+$$
+\frac{1}{n} \sum_{i=1}^n [y_i - (w_0 + w_1 x_i)] = 0 \implies w_0^* = \bar{y} - w_1^* \bar{x}
+$$
+where $\bar{x}, \bar{y}$ represent the means of $x$ and $y$ respectively. Similarly, from the second equation, we get:
+$$
+\frac{1}{n} \sum_{i=1}^n [x_i y_i - x_i w_0 - w_1 x_i^2] = 0 .
+$$
+Plugging in the value of $w_0$ and solving for $w_1$ (with some algebraic simplification), we get:
+$$
+w_1^* = \frac{\frac{1}{n} \sum_{i=1}^n x_i y_i - \bar{x}\bar{y}}{\sum_{i=1}^n x_i^2 - \bar{x}^2} .
+$$
+One might be able to recognize the terms on the right hand side. The denominator is simply the *variance* of $x$ (call it $\sigma_x^2$) while the numerator is the *cross covariance* between $x$ and $y$ (call it $\sigma_{xy}$). It is somewhat natural to expect this kind of behavior: the slope coefficient $w_1$ being the ratio of $\sigma_{xy}$ to $\sigma_x^2$.
 
-So by paying a small additional factor ($O(\log n)$) in terms of pre-processing time, we can dramatically speed up running time per query. This kind of trick will often be used in several techniques that we will encounter later.
+There we have it, then. For any new data point $x$, we can compute its predicted value $y$ by simply writing out $\hat{y} = w_0^* + w_1^* x$, where $w_0^*, w_1^*$ have the closed form expressions as above.
 
-## Extension to higher dimensions: kd-trees
+The minimum MSE can also be computed this way in closed form by plugging in these values of $w_0^*, w_1^*$. We get:
+$$
+MSE^* = \frac{1}{n} \sum_{i=1}^n [y_i - (w_0^* + w_1^* x_i)]^2 ,
+$$
+and with some tedious but simple algebra, we can derive the following expression:
+$$
+MSE^* = \sigma_y^2 - \frac{\sigma_{xy}^2}{\sigma_{x}^2}.
+$$
+where $\sigma_y^2$ is the variance of $y$. Rewriting slightly, we get:
+$$
+\frac{MSE}{\sigma_y^2} =  1- \frac{\sigma_{xy}^2}{\sigma_{x}^2 \sigma_{y}^2} .
+$$
+The ratio on the left hand side is called the *fraction of unexplained variance*. For a perfectly interpolating model, this would be equal to zero. The ratio on the right hand side is called the *coefficient of determination*. Statisticians like to call it $R^2$ ('r-squared'). An $R^2$ close to 1 implies a well-fitted model, while an $R^2$ of close to zero implies the opposite.
 
-The "binary search" idea works well in one dimension ($d=1$). For $d>1$, a similar idea called *kd-trees* can be developed. (The nomenclature is a bit strange, since "kd" here is short for "k-dimensional". But to be consistent, we will use the symbol $d$ to represent dimension.) It's a bit more complicated since there is no canonical way to define "binary search" in more than one dimension.
+## Multivariate regression
 
-### Preprocessing
+The above approach can be generalized to the case of high-dimensional (vector-valued) data. In this case, the functional form for linear models is given by:
+$$
+y_i \approx \langle w, x_i \rangle,~i=1,\ldots,n.
+$$
+where $w \in \mathbb{R}^d$ is now a *vector* containing all the regression coefficients.
 
-For concreteness, consider two dimensions ($d=2$). Then, all data points (and the query point) can be represented within some bounded rectangle in the XY-plane.  
+(For simplicity, we have dropped the intercept term in the linear model. In ML jargon, this is called the *bias*, and can be handled analogously but the closed-form expressions below are somewhat more tedious.)
 
-We first sort all data points according to the $X$-dimension, as well as according to the $Y$-dimension.
+The second step is the loss function. Let us define the MSE loss in this case:
+$$
+L(w) = \frac{1}{2} \sum_{i=1}^d (y_i - \langle x, w \rangle^2),
+$$
 
-Next, we arbitrarily choose a *splitting direction* along one of the two axes. (Without loss of generality, suppose we choose the X-direction.) Then, we divide the data set into two subsets according to the X-values of the data points by drawing a line perpendicular to the X-axis through the *median* value of the (sorted) X-coordinates of the points. Each subset will contain the same number of points if $n$ is even, or differ by 1 if $n$ is odd.
+For conciseness, we write this as:
+$$
+L(w) = \frac{1}{2} \|y - Xw\|^2
+$$
+where the norm above denotes the Euclidean norm, $y = (y_1,\ldots,y_n)^T$
+is an $n \times 1$ vector containing the $y$'s and $X = (x_1^T; \ldots; x_n^T)$
+is an $n \times d$ matrix containing the $x$'s, sometimes called the "data matrix". Statisticians like to call this the *design matrix* sometimes.
 
-We recursively apply the above splitting procedure for the two subsets of points. At every recursive step, each of the two subsets will induce two halves of approximately the same size. One can imagine this process as an approximately balanced binary tree, where the root is the given input dataset, each node represents a subsets of points contained in a sub-rectangle of the original rectangle we started with, and the leaves correspond to singleton subsets containing the individual data points.  
+In high dimensions, the vector of partial derivatives (or the *gradient*) of $L(W)$ is given by:
+$$
+\nabla L(w) = - X^T (y - Xw) .
+$$
 
-After $O(\log n)$ levels of this tree, this process terminates. Done!
+The above function $L(w)$ is a quadratic function of $w$. The value of $w$ that minimizes this (say, $w^*$) can be obtained by setting the gradient of $L(w)$ to zero and solving for $w$:
+$$
+\begin{aligned}
+\nabla L(w) &= 0, \\
+- X^T (y - Xw) &= 0, \\
+X^T X w &= X^T y,~~\text{or}\\
+w &= (X^T X)^{-1} X^T y .
+\end{aligned}
+$$
+The above represents a set of $d$ linear equations in $d$ variables, and are called the *normal equations*. If $X^T X$ is invertible (i.e., it is full-rank) then the solution to this set of equations is given by:
+$$
+w^* = \left(X^T X \right)^{-1} X^T y.
+$$
+If $n \geq d$ then one can generally (but not always) expect it to be full rank; if $n < d$, this is not the case and the problem is under-determined.
 
-There is some flexibility in choosing the splitting direction in each recursive call. One option is to choose the axis where the coordinates of the data points have the maximum variance. The other option is to simply alternate between the axes for $d=2$ (or cycle through the axes in a round-robin manner for $d>2$). The third option is to choose the splitting direction at random. Either way, the objective is to make sure the overall tree is balanced.
-
-The overall running time is the same as sorting the $n$ data points along each dimension, which is given by $O(dn \log n)$.
-
-### Nearest neighbor queries
-
-Like in the 1D case, nearest neighbor queries can be made using a divide-and-conquer strategy. We leverage the pre-processed data (i.e., the kd-tree) to quickly discard large portions of the dataset as candidate nearest neighbors to a given query point.
-
-Identical to the 1D case, the nearest neighbor algorithm starts at the root, looks at the splitting direction (in our above example, the initial split is along the X-direction), and moves left or right depending on whether the query point has its corresponding coordinate (in our above example, its X-coordinate) smaller than or greater than the median value. Recursively do this to traverse all the way down to one of the leaves of the binary tree.
-
-This traversal takes $O(\log n)$ comparisons. Now, unlike the 1D case, there is no guarantee that the leaf data point is the true nearest neighbors (since we have been fairly myopic and only looked at each co-ordinate in order to make our decisions while traversing the tree.) So, we need to do some additional calculations to refine our estimate.
-
-Declare the data point in the leaf as the *current estimate* of the nearest neighbor, and calculate the distance, $\Delta$, between the current estimate and the query point. It is certainly true that the *actual* nearest neighbor cannot be further away than the current estimate. In other words, the true nearest neighbor lies within a circle of radius $\Delta$ centered at the query point.
-
-Therefore, we only need to examine the sub-rectangles (i.e., nodes of the binary tree) that *intersect this circle*! All other rectangles (and points within those rectangles) are irrelevant.
-
-Checking whether the circle intersects a given sub-rectangle is simple: since each rectangle is specified by a split that occurred along some X- (or some Y-) coordinate (say at value $\alpha$), we only have to check whether the difference between the splitting coordinate of the query point and $\alpha$ exceeds $\Delta$. If yes, then there is no intersection; we can safely discard the sub-rectangle (and all its children). This intuition supports the divide-and-conquer strategy.
-
-One can prove that the *expected* number of additional nodes that need to visit is given by $O(\log n)$ if the original data is generated from certain random distributions. However, in the worst case we may still need to perform $O(n)$ distance calculations, which implies a worst-case running time of $O(nd)$ (i.e., no better than vanilla nearest neighbors.)
-
-Nevertheless, kd-trees are often used in practice, particularly for moderate dimensional problems. Most modern machine learning software packages (such as scikit-learn for Python) have robust implementations of kd-trees that offer considerable speedups over nearest neighbors.
+Computing $X^T X$ takes $O(dn^2)$ time, and inverting it takes $O(d^3)$ time. So, in the worst case (assuming $n > d$), we have a running time of $O(nd^2)$, which can be problematic for large $n$ and $d$. Can we do something simpler? In the next lecture, we will devise methods that will scale more gracefully to very large datasets.
