@@ -1,8 +1,6 @@
 _ECE-GY 6143, Spring 2020_
 
-# Lecture 5: Regularization, logistic regression
-
-## Regularization: ridge regression, LASSO
+# Regularization, logistic regression
 
 We discussed how to distinguish between different models using the bias-variance curve. This gives us a thumb rule to decide which model to select:
 

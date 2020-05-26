@@ -1,4 +1,4 @@
-# Lecture 6
+# Classification
 
 The next few lectures are going to focus on **classification** problems, which constitute an extremely important class of problems in machine learning.
 

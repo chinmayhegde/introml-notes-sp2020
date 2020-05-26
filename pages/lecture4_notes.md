@@ -1,6 +1,6 @@
 _ECE-GY 6143, Spring 2020_
 
-# Lecture 4: SGD, Regularization, LASSO
+# Stochastic Gradient Descent
 
 Recall that in the previous lecture, we derived a very simple iterative algorithm to solve linear regression: Gradient descent (GD). We showed that if the step size is chosen carefully, the parameter estimates at the $k^{th}$ iteration satisfy:
 $$
