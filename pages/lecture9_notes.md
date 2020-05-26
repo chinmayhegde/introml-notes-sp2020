@@ -11,12 +11,15 @@ If we do that, we will notice that the graph in the above (linear) models has a 
 ![Structure of a deep neural network](figures/nn.png){ width=90% }
 
 Let us retain the feed-forward structure, but now extend to a composition of lots of such units. The primitive operation for each "unit", which we will call a *neuron*, will be written in the following functional form:
+
 $$
 z = \sigma(\sum_{j} w_j x_j + b)
 $$
+
 where $x_j$ are the inputs to the neuron, $w_j$ are the weights, $b$ is a scalar called the *bias*, and $\sigma$ is a nonlinear scalar transformation called the *activation function*. So linear regression is the special case where $\sigma(z) = z$, logistic regression is the special case where $\sigma(z) = 1/(1 + e^{-z})$, and the perceptron is the special case where $\sigma(z) = \text{sign}(z)$.   
 
 A neural network is a *feedforward composition* of several neurons, typically arranged in the form of *layers*. So if we imagine several neurons participating at the $l^{th}$ layer, we can stack up their weights (row-wise)  in the form of a *weight matrix* $W^(l)$. The output of neurons forming each layer forms the corresponding input to all of the neurons in the next layer. So a 3-layer neural network would have the functional form:
+
 $$
 \begin{aligned}
 z_1 &= \sigma^{1}(W^{1} x + b^{1}), \\
@@ -24,6 +27,7 @@ z_2 &= \sigma^{2}(W^{2} z_1 + b^{2}), \\
 y &= \sigma^{3}(W^{3} z_2 + b^{3}) .
 \end{aligned}
 $$
+
 Analogously, one can extend this definition to $L$ layers for any $L \geq 1$.
 The nomenclature is a bit funny sometimes. The above example is either called a "3-layer network" or "2-hidden-layer network"; the output $y$ is considered as its own layer and not considered as "hidden".
 
@@ -36,7 +40,9 @@ The problem, of course, is that while the UAT confirms the mere *existence* of a
 Leaving beside theoretical considerations, one can identify several questions of practical
 
 * How do we choose the widths, types, and number, of layers in a neural network?  
+
 * How do we learn the weights of the network?
+
 * Even if the weights were somehow learned using a (large) training dataset, does the prediction function work for new examples?
 
 The first question is a question of **designing representation**. The second is a question of choice of **training algorithm**. The third is an issue of **generalization**. Intense research has occurred (and is still ongoing) in all three questions.
@@ -58,11 +64,17 @@ among many others. The ReLU is most commonly used nowadays since it does not suf
 There are also various types for layers:
 
 * *Dense* layers -- these are basically layers of neurons whose weights are unconstrained
+
 * *Convolutional* layers -- these are layers of neurons whose weights correspond to *filters* that perform a (1D or 2D) convolution with respect to the input.  
+
 * *Pooling* layers -- These act as "downsampling" operations that reduce the size of the output. There are many sub-options here as to how to do so.
+
 * *Batch normalization* layers -- these operations rescale the output after each layer by adjusting the means and variances for each training mini-batch.  
+
 * *Recurrent* layers -- these involve feedback connections.
+
 * *Residual* layers -- there involve "skip connections" where the outputs of Layer $l$ connect directly to Layer $l+2$.
+
 * *Attention* layers -- these are used in NLP applications,
 
 among many others.
@@ -74,31 +86,39 @@ As you can see, there are tons of ways to mix and match various architectural in
 Let us assume that a network architecture (i.e., the functional form of the prediction function $f$) has been decided upon. How do we learn the parameters (i.e., the weights and biases) of the network?
 
 Fortunately, the basic approach is similar to what we have seen before: we first choose a suitable loss function, and then use (variations) of gradient descent to optimize it. (For example, in a regression or classification setting, we might choose the cross-entropy loss.) Stack up *all* the weights and biases of the network into a variable $W$  Then, we first define:
+
 $$
 L(W) = \sum_{i=1}^n l(y_i, f(x_i)) + \lambda R(W)
 $$
+
 where $l(\cdot, \cdot)$ is the loss applied for a particular prediction and $R(\cdot)$ is an optional regularizer. Then, we train using GD (or more commonly, minibatch SGD):
+
 $$
 W^{t+1} = W^{t} - \alpha^{t} \left(  \sum_{i \in S} \nabla l(y_i, f_W(x_i))  + \lambda \nabla R(W) \right).
 $$
+
 where $S$ is a minibatch of samples. So really, everything boils down to computing the gradient of the loss. As we will see below, this may become cumbersome.
 
 ### A toy example
 
 Let us work out the gradient of the ridge regression loss for a *single* neuron with a sigmoid activation with a single scalar data point. This is obviously the easiest example. The model is as follows:
+
 $$
 \begin{aligned}
 z &= wx + b,~f(z) = \sigma(z),\\
 L(w,b) &=  0.5 (y - \sigma(wx + b))^2 + \lambda w^2.
 \end{aligned}
 $$
+
 Calculation of the gradient is basically an invocation of the chain rule from calculus:
+
 $$
 \begin{aligned}
 \frac{\partial L}{\partial w} &= (\sigma(wx + b) - y) \sigma'(wx + b) x + 2 \lambda w, \\
 \frac{\partial L}{\partial b} &= (\sigma(wx + b) - y) \sigma'(wx + b).
 \end{aligned}
 $$
+
 Immediately, we notice some inefficiencies. First, the expressions are already very complicated (can you imagine how long the expressions will become for arbitrary neural nets?). Sitting and deriving gradients is tedious and may lead to errors.
 
 Second, notice that the above gradient computations are *redundant*. We have computed $\sigma(wx + b)$ and $\sigma'(wx + b)$ twice, one each in the calculations of $\frac{\partial L}{\partial w}$ and $\frac{\partial L}{\partial b}$. Digging even deeper, the expression $wx + b$ appears four times. Is there a way to avoid repeatedly calculating the same expression?
@@ -106,6 +126,7 @@ Second, notice that the above gradient computations are *redundant*. We have com
 ### The backpropagation algorithm
 
 The intuition underlying the backpropagation algorithm (or backprop for short) is that we can solve both of the above issues by leveraging the structure of the network itself. Let us decompose the model a bit more clearly as follows:
+
 $$
 \begin{aligned}
 z &= wx + b, \\
@@ -115,6 +136,7 @@ r &= w^2, \\
 L &= l + \lambda r.
 \end{aligned}
 $$
+
 This sequence of operations can be written in the form of the following computation graph:
 
 ![Computation graph for a single neuron and ridge regression](figures/computation-graph.png){ width=90% }
@@ -140,6 +162,7 @@ function BACKWARD():
 Maybe best to explain via example. Let us revisit the above single neuron case, but use the BACKWARD() algorithm to compute gradients of $L$ at each of the 7 variable nodes ($x$ and $y$ are inputs, not variables) in reverse order. Also, to abbreviate notation, let us denote $\partial_x f := \frac{\partial f}{\partial x}$.
 
 We get:
+
 $$
 \begin{aligned}
 \partial_L L &= 1, \\
@@ -151,6 +174,7 @@ $$
 {\partial_b L} &= {\partial_z L} \cdot {\partial_b z} = {\partial_z L}.
 \end{aligned}
 $$
+
 Note that we got the same answers as before, but now there are several advantages:
 
 -  no more redundant computations: every partial derivative depends cleanly on partial derivatives on child nodes (so, operations that have already been computed before) and hence there is no need to repeat them.
