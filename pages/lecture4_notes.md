@@ -103,14 +103,17 @@ The last point (nonlinear models) we will deal with when we discuss more sophist
 Let us tackle the first two aspects first (model selection). Until now, our setting has been the following. Given a training dataset $\{x_i, y_i\}$, fit a function $f$ such that $y_i \approx f(x_i)$. We assume that the data is sampled from a distribution $D$ that obeys an unknown but "true" relationship $y = t(x) + \epsilon$, where $\epsilon$ denotes irremovable i.i.d. zero-mean noise of variance $\sigma^2$.
 
 But really, we care about performance on an *unseen* $x,y$. So even though we optimize training MSE in any regression problem, what we really care about is minimizing:
+
 $$
 \text{Test MSE} = E_{(x,y)\sim D} (y - f(x))^2 .
 $$
+
 where the expectation is over the draw of the training set and the noise.
 
 We have no direct way to calculate this in reality (because the test set is not known beforehand). Therefore, while building ML models, this is typically simulated via a hold-out subset of the available training data, and pretending this is representative of the test-dataset. (In order to reduce simulation effects, this procedure is repeated $k$ times -- given rise to the name *k-fold cross validation*).
 
 So let us say we have estimated the test MSE, and we would like to reduce this number. What should we do next? One path forward is revealed by decomposing the test MSE into the following expectation (with respect to the choice of training set):
+
 $$
 \begin{aligned}
 \text{Test MSE} &= E_{(x,y)\sim D} (y - f(x))^2 \\
@@ -120,6 +123,7 @@ $$
 &= \sigma^2 + \text{Bias}^2 + \text{Variance}
 \end{aligned}
 $$
+
 where $\text{Bias}$ and $\text{Variance}$ are referring to the random variable $t(x) - f(x)$. For a more comprehensive derivation, see the treatment in Bishop's textbook, Section 3.
 
 Therefore, our MSE can be decomposed into three terms:
@@ -144,9 +148,11 @@ which we will experimentally demonstrate in class.
 ## Regularization: ridge regression, LASSO
 
 How do we realize the above thumb rule in practice? One technique to define "simple" vs "complex" is to via *regularization*. Instead of minimizing the MSE, we define a *new* loss function that combines both the goodness-of-fit as well as how "complex" the function is. More specifically, we minimize:
+
 $$
 L(w) = MSE(w) + \alpha \phi(w)
 $$
+
 where $\phi(w)$ is a scalar function of $w$ called the *regularizer* and penalizes $w$ that are "unlikely", and $\alpha$ controls the level of regularization.
 
 Common choices of $\phi(w)$ are:
@@ -155,19 +161,25 @@ Common choices of $\phi(w)$ are:
 * $\phi(w) = \|w\|^{}_1$, the $L_1$ norm of $w$.
 
 We can interpret these regularizers as follows. If we minimize:
+
 $$
 L(w) = \|y - X w\|^2_2 + \alpha \|w\|^2_2,
 $$
+
 this is called *ridge regression*, and the hope is that by constraining the Euclidean norm of $w$, we are encouraging many of the coefficients of $w$ to become small (and hence leading to lesser variance). Using vector calculus, one can show that the (closed form) minimizer can be found as:
+
 $$
 w = (X^T X + \alpha I)^{-1} X^T y .
 $$
+
 but we will skip the details here.
 
 On the other hand, if we minimize:
+
 $$
 L(w) = \|y - X w\|^2_2 + \alpha \|w\|^{}_1
 $$
+
 this is called *LASSO* regression. The interesting feature here is that this constrains many of the coefficients of $w$ to not just become small, but explicit be *zeroed out*. Therefore, the final $w$ we get is typically sparse (i.e., most of the coefficients are zero), and the surviving coefficients that are nonzero indicate the "important" features for that given choice of training dataset and at that regularization level.
 
 Unfortunately there is no closed form solution for actually finding the LASSO minimizer, and moreover, gradients don't exist (since the $L_1$ norm is not differentiable)! Therefore, GD/SGD cannot be applied out of the box. However, several algorithms to minimize the loss function exist, including sub-gradient descent, Least angle regression (LARS), ADMM, iterative soft thresholding, etc --- all outside the scope of this class. More to come in later lectures when we discuss SVMs.
