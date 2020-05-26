@@ -1,4 +1,4 @@
-# Lecture 8: Kernels and MLPs
+# Kernels and MLPs
 
 To recap the ideas underlying kernel methods:
 
