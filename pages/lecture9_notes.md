@@ -1,8 +1,4 @@
-_ECE-GY 6143, Spring 2020_
-
-# Lecture 9: Introduction to Neural Networks
-
-## Basics
+# Neural Networks
 
 We have already introduced (single- and multi-layer) perceptrons in the previous lecture, and have interpreted them as a generalization to kernel methods. Deep neural networks are generalizations of the same concept.
 

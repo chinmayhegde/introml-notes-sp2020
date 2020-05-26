@@ -1,5 +1,3 @@
-_ECE-GY 6143, Spring 2020_
-
 # SVMs and Kernel Machines
 
 The issue with the logistic and the perceptron classifiers that we have discussed so far is that they are *brittle*, and do not always provide robust separators. For example, if the data is separable, the perceptron returns *a* separator (one among the infinitely many linear separators that exist.) How can we get the *best* separator?
