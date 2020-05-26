@@ -92,10 +92,13 @@ Do the same to the query document as well, so that we also obtain a query vector
 Once we have a vector representation of every document, as well as the query vector $x^*$, we now have to define what "best match" means in the context of vector spaces.
 
 Again, there is no unique way to do this. In text analysis, a common measure of "best" is the cosine similarity. More precisely, we calculate -- for each $i$ -- the cosine similarity between the query vector with each other vector in the dataset:
+
 $$
 \cos \theta_i = \frac{\langle x^*, x_i \rangle}{\|x^*\|_2 \|x_i\|_2},
 $$
+
 and output the index $i^*$ as __ :
+
 $$
 i^* = \arg \max_i \cos \theta_i .
 $$
@@ -111,6 +114,7 @@ The above method works well, but the vector space representation is a bit brittl
 This heavily inflates the influence of the co-ordinates of the vector space corresponding to these words. However, generally these words are uninformative and their effect should be ideally minimized.
 
 In order to do this coherently, we define a new vector space representation. For document $i$, we construct a vector $x_i$ such that the $j^\textrm{th}$ co-ordinate is given by:
+
 $$
 x_i(j) = \text{tf}_i (j) \cdot \text{idf}(j).
 $$
@@ -118,6 +122,7 @@ $$
 The term $\text{tf}_i (j)$ is the same as before; it represents *term-frequency* and counts the number of occurrences of word $j$ in document $i$.
 
 The term $\text{idf}(j)$ is called the *inverse-document* frequency, and is defined as follows. Let $n_j$ be the number of documents in the database which contain at least one occurrence of word $j$. Then,
+
 $$
 \text{idf}(j) = \log \left(\frac{n_j}{n}\right)^{-1} = \log \frac{n}{n_j} .
 $$
