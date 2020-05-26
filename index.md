@@ -8,30 +8,30 @@ Links:
 
 - [Overview](pages/lecture0_notes.html)
 
-- [Lecture 1](pages/lecture1_notes.html)
+- [Nearest Neighbors](pages/lecture1_notes.html)
 
-- [Lecture 2](pages/lecture2_notes.html)
+- [Linear Regression](pages/lecture2_notes.html)
 
-- [Lecture 3](pages/lecture3_notes.html)
+- [Gradient Descent](pages/lecture3_notes.html)
 
-- [Lecture 4](pages/lecture4_notes.html)
+- [SGD, Model Selection](pages/lecture4_notes.html)
 
-- [Lecture 5](pages/lecture5_notes.html)
+- [Logistic Regression](pages/lecture5_notes.html)
 
-- [Lecture 6](pages/lecture6_notes.html)
+- [Classification](pages/lecture6_notes.html)
 
-- [Lecture 7](pages/lecture7_notes.html)
+- [SVMs](pages/lecture7_notes.html)
 
-- [Lecture 8](pages/lecture8_notes.html)
+- [Kernel Machines](pages/lecture8_notes.html)
 
-- [Lecture 9](pages/lecture9_notes.html)
+- [Neural Networks](pages/lecture9_notes.html)
 
-- [Lecture 10](pages/lecture10_notes.html)
+- [ConvNets, RNNs](pages/lecture10_notes.html)
 
-- [Lecture 11](pages/lecture11_notes.html)
+- [PCA](pages/lecture11_notes.html)
 
-- [Lecture 12](pages/lecture12_notes.html)
+- [Clustering](pages/lecture12_notes.html)
 
-- [Lecture 13](pages/lecture13_notes.html)
+- [Reinforcement Learning](pages/lecture13_notes.html)
 
-- [Lecture 14](pages/lecture14_notes.html)
+- [Misc Topics](pages/lecture14_notes.html)

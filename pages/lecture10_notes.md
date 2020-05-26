@@ -1,3 +1,5 @@
+_ECE-GY 6143, Spring 2020_
+
 # Neural Network Architectures
 
 Thus far, we have introduced neural networks in a fairly generic manner (layers of neurons, with learnable weights and biases, concatenated in a feed-forward manner). We have also seen how such networks can serve very powerful representations, and can be used to solve problems such as image classification.
