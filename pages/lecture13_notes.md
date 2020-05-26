@@ -1,6 +1,6 @@
 _ECE-GY 6143, Spring 2020_
 
-# Lecture 13: Reinforcement Learning
+# Reinforcement Learning
 
 Through this course, we have primarily focused on supervised learning (building a prediction function from labeled data), and briefly also discussed unsupervised learning (discovering structure in unlabeled data).  In both cases, we have assumed that the data to the machine learning algorithm is *static* and the learning is performed *offline*. Even more troublesome is the following fact: in the real world, the data that is available is often influenced by previous predictions that you have made. (Think, for example, of stock markets.)
 
@@ -39,6 +39,7 @@ Here, $f$ is the *state transition* function that is entirely determined by the 
 * The agent's goal is to decide on a strategy (or policy) of choosing the next action based on all past states and actions: $s_t, a_{t-1}, s_{t-1}, \ldots, s_1, a_1, s_0, a_0$. The sequence of state-action pairs $\tau_t = (s_0, a_0, a_1, s_1, \ldots, a_t, s_t)$ is called a *trajectory* or *rollout*. Typically, it is impractical to store and process the entire history, so policies are chosen only over a fixed time interval in the past (called the *horizon length* $L$).
 
 So a policy is simply a function $\pi$ that maps $\tau$ to $a_t$. Our goal is to figure out the best mapping function (in terms of maximizing the rewards). Such an optimization is well suited to machine learning tools we already know! Pose the cumulative negative reward as a loss function, and minimize this loss as follows:
+
 $$
 \begin{aligned}
 \text{minimize}~&R(\tau) = \sum_{t=0}^{L-1} - r(s_t, a_t), \\
@@ -46,6 +47,7 @@ $$
 & a_t = \pi(\tau_t) .
 \end{aligned}
 $$
+
 OK, this looks similar to a loss minimization setting that we are all familiar with. We can begin to apply any of our optimization tools (e.g. SGD) to solve it. Several caveats, however, and we have to be more precise about what we are doing.
 
 First, what are the optimization variables? We are seeking the best among all *policies* $\pi$ (which, above, are defined as functions from trajectories to actions), so this means that we will have to parameterize these policies somehow. We could imagine this to be a linear model, or kernel model, or a deep neural network (the last one opens the door to a sub-field of RL called *deep reinforcement learning*). For now, let's just stay simple and consider linear policies.
@@ -60,6 +62,7 @@ The last two assumptions are not critical -- for example, in simple games, the d
 
 Since policies are probabilistic, they induce probability distribution over trajectories, and hence the cumulative negative reward is also probabilistic.
 So to be more precise, we will need to rewrite the loss in terms of the *expected value* over the randomness:
+
 $$
 \begin{aligned}
 \text{minimize}~&\mathbb{E}_{\pi(\tau)} R(\tau) =  \sum_{t=0}^{L-1} - r(s_t, a_t), \\
@@ -77,13 +80,16 @@ We now return to the first sentence of this subsection: why RL is "in-between" s
 Let us now discuss a technique to numerically solve the above optimization problem. Basically, it will be akin to 'trial-and-error' -- sample a rollout with some actions; if the reward is high then make those actions more probable (i.e., "reinforce" these actions), and if the reward is low then make those actions less probable. In order to maximize expected cumulative rewards, we will need to figure out how to take gradients of the reward with respect to the policy parameters.
 
 Recall that trajectories/rollouts $\tau$ are a probabilistic function of the policy parameters $\theta$. Our goal is to compute the gradient of the expected reward, $\mathbb{E}_{\pi(\tau)} R(\tau)$ with respect to $\theta$. To do so, we will need to take advantage of the *log-derivative trick*. Observe the following fact:
+
 $$
 \begin{aligned}
 \frac{\partial}{\partial \theta} \log \pi(\tau) &= \frac{1}{\pi(\tau)} \frac{\partial \pi(\tau)}{\partial \theta},~\text{i.e.} \\
 \frac{\partial \pi(\tau)}{\partial \theta} &= \pi(\tau) \frac{\partial}{\partial \theta} \log \pi(\tau) .
 \end{aligned}
 $$
+
 Therefore, the gradient of the expected reward is given by:
+
 $$
 \begin{aligned}
 \frac{\partial}{\partial \theta} \mathbb{E}_{\pi(\tau)} R(\tau) &= \frac{\partial}{\partial \theta} \sum_{\tau} R(\tau) \pi(\tau) \\
@@ -92,6 +98,7 @@ $$
 &= \mathbb{E}_{\pi(\tau)} [R(\tau) \frac{\partial}{\partial \theta} \log \pi(\tau)].
 \end{aligned}
 $$
+
 So in words, the gradient of an expectation can be converted into an expectation over a closely related quantity. So instead of computing this expectation, like in SGD we *sample* different rollouts and compute a stochastic approximation to the gradient. The entire pseudocode is as follows.
 
 Repeat:
@@ -114,9 +121,11 @@ In the above algorithm, notice that we never require direct access to the enviro
 In the above algorithm, in order to optimize over rewards, observe we only needed to access function evaluations of the reward, $R(\tau)$, but *never its gradient*. This is in fact an example of *derivative free optimization*, which involves optimizing functions without gradient calculations.
 
 Another way to do derivative free optimization is simple: just random search! Here is a quick introduction. If we are minimizing a loss function $f(\theta)$, recall that gradient descent updates $\theta$ along the negative direction of the gradient:
+
 $$
 \theta \leftarrow \theta - \eta \nabla f(\theta) .
 $$
+
 But in random search, we pick a *random* direction $v$ to update $\theta$, and instead search for the (scalar) step size that provides maximum decrease in the
 loss along that direction. The pseudocode is as follows:
 

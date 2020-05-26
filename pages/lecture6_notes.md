@@ -1,3 +1,5 @@
+_ECE-GY 6143, Spring 2020_
+
 # Classification
 
 The next few lectures are going to focus on **classification** problems, which constitute an extremely important class of problems in machine learning.

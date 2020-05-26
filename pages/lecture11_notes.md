@@ -1,3 +1,5 @@
+_ECE-GY 6143, Spring 2020_
+
 # Generalization, Intro to Unsupervised Learning
 
 Modern machine learning models (such as neural nets) typically have lots of parameters. For example, the best architecture as of the end of 2019 for object recognition, measured using the popular ImageNet benchmark dataset, contains *928 million* learnable parameters. This is far greater than the number of training samples (about 14 million).

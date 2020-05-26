@@ -1,3 +1,5 @@
+_ECE-GY 6143, Spring 2020_
+
 # Kernels and MLPs
 
 To recap the ideas underlying kernel methods:
