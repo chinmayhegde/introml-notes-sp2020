@@ -76,7 +76,7 @@ Suppose a $d$-dimensional dataset (without labels) $\{x_1,x_2,\ldots,x_n\}$ is g
 
 Imagine stacking up the data points into rows of an $n \times d$ matrix $X$. Our goal is to figure out interesting correlations within the data in an unsupervised manner. For example, if two features were somehow correlated (say the first two co-ordinates of each data point were proportional to each other) then it makes sense to identify such correlations automatically and maybe even discard one of them since there is no new information. From a geometric standpoint, we need to figure out the directions of *variation* in the data.
 
-Mathematically, we can do the same trick that we have been doing before: consider a line represented by a parameter vector $w \in \mathbb{R}^d$ (normalized such that $\|w\| = 1$). In that case, the projections onto each data point have the expression $|\langle x_i, w \rangle |$. Therefore, the sample *variance* of the lengths of the projections is given by:
+Mathematically, we can do the same trick that we have been doing before: consider a line represented by a parameter vector $w \in \mathbb{R}^d$ (normalized such that $\|w\| = 1$). In that case, the projections onto each data point have the expression $| \langle x_i, w \rangle |$. Therefore, the sample *variance* of the lengths of the projections is given by:
 
 $$
 \begin{aligned}
