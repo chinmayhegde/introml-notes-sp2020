@@ -1,8 +1,4 @@
-_ECE-GY 6143, Spring 2020_
-
-# Lecture 10: Neural Network Architectures
-
-## Beyond fully connected networks
+# Neural Network Architectures
 
 Thus far, we have introduced neural networks in a fairly generic manner (layers of neurons, with learnable weights and biases, concatenated in a feed-forward manner). We have also seen how such networks can serve very powerful representations, and can be used to solve problems such as image classification.
 
@@ -35,16 +31,21 @@ Both of these can be realized by defining a new type of neural net architecture,
 ### Definition
 
 A quick recap of convolution from signal processing. We have two signals (for our purposes, everything is in discrete-time, so they can be thought of as arrays) $x[t]$ and $w[t]$. Here, $x$ will be called the *input* and $w$ will be called the *filter* or *kernel* (not to be confused with kernel methods). The convolution of $x$ and $w$, denoted by the operation $\star$, is defined as:
+
 $$
 (x \star w)[t] = \sum_\tau x[t - \tau] w[\tau] .
 $$
+
 It is not too hard to prove that the summation indices can be reversed but the operation remains the same:
+
 $$
 (x \star w)[t] = \sum_\tau x[\tau] w[t - \tau] .
 $$
+
 In the first sense, we can think of the output of the convolution operation as  "translate-and-scale", i.e., shifting various copies of $x$ by different amounts $\tau$, scaling by $w[\tau]$ and summing up. In the second sense, we can think of it as "flip-and-dot", i.e., flipping $w$ about the $t=0$ axis, shifting by $t$ and taking the dot product with respect to $x$.
 
 This definition extends to 2D images, except with two (spatial) indices:
+
 $$
 (x \star w)[s,t] = \sum_\sigma \sum_\tau x[s - \sigma, t - \tau], w[\sigma, \tau]
 $$
@@ -58,13 +59,17 @@ Moreover, we can also address Principle 1: if we *limit* the support (or the num
 ### Convolution layers
 
 We can use the above properties to define convolution layers. Somewhat confusingly, the "flip" in "flip-and-dot" is ignored; we don't flip the filter and hence use a $+$ instead of a $-$ in the indices:
+
 $$
 z[s,t] = (x \star w)[s,t] = \sum_{\sigma = -\Delta}^{\Delta} \sum_{\tau = -\Delta}^{\Delta} x[s + \sigma,t + \tau] w[\sigma,\tau].
 $$
+
 So, basically like the definition convolution in signal processing but with slightly different notation -- so this is only a cosmetic change. The support of $w$ ranges from $-\Delta$ to $-\Delta$. This induces a corresponding region in the domain of $x$ that influences the outputs, which is called the *receptive field*. We can also choose to apply a nonlinearity $\phi$ to each output:
+
 $$
 h[s,t] = \phi(z[s,t]).
 $$
+
 The corresponding transformation is called *feature map*. The new picture we have for our convolution layer looks something like this:
 
 ![Structure of a conv layer](figures/conv-layer.png){ width=60% }
@@ -76,6 +81,7 @@ Observe that this operation can be implemented by matrix multiplication with a s
 * Because of the shift invariance property, the weights of different output neurons are the same (notice that in the summation, the indices in $w$ are independent of $s,t$). Therefore, the *weights are shared*.
 
 The above definition computed a single feature map on a 2D input. However, similar to defining multiple hidden neurons, we can extend this to multiple feature maps operating on multiple input channels (the input channels can be, for example, RGB channels of an image, or the output features of other convolution layers). So in general, if we have $D$ input channels and $F$ output feature maps, we can define:
+
 $$
 \begin{aligned}
 z_i &= \sum_j x_j \star w_{ij} \\
@@ -128,9 +134,11 @@ among a host of other applications.
 If we think of a speech signal or a sentence in vector/array form, notice that the contents of the vector exhibits *both* short range as well as *long-range* dependencies; for example, the start of a sentence may have relevance to the end of a sentence. (Example: "The cow, in its full glory, jumped over the moon" -- the subject and object are at two opposite ends of the sentence.)
 
 Classically, the tools to solve NLP problems were *Markov* models. If we assume a sequence of words $w = (w_1,w_2,\ldots,w_d)$, and define a probability distribution $P(w)$, then, short-range dependences could be captured via the Markov assumption that the likelihood of each word only depended on the previous word in the sentence:
+
 $$
 P(w) = P((w_1,w_2,\ldots,w_d)) = P(w_1) \cdot P(w_2 | w_1) \cdot \ldots P(w_d | w_{d-1}) .
 $$
+
 If we were being brave, we could extend it to two, or three, previous words -- but realize that as we introduce more and more dependencies across time, the probability calculations quickly become combinatorially large.
 
 ### Definition
@@ -138,12 +146,14 @@ If we were being brave, we could extend it to two, or three, previous words -- b
 An elegant way to resolve this issue and introduce long(er) range dependencies is via *feedback*. Thus far, we have strictly used feedforward connections, which are somewhat limiting in the case of NLP.
 
 Let us now introduce a new type of neural net with *self-loops* which acts on time series, called the *recurrent neural net* (RNN). In reality, the self-loops in the hidden neurons are computed with unit-delay, which really means that the output of the hidden unit at a given time step depends both on the input at that time step, and the output at a previous time step. The mathematical definition of the operations are as follows:
+
 $$
 \begin{aligned}
 h^{t} &= \phi(U x^{t} + W h^{t-1}) \\
 y^{t} &= V h^{t} .
 \end{aligned}
 $$
+
 So, historical information is stored in the output of the hidden neurons, across different time steps. We can visualize the flow of information across time by "unrolling" the network across time.
 
 ![Structure of RNN](figures/rnn.png){ width=90% }
