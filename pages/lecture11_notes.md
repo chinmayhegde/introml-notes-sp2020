@@ -1,8 +1,4 @@
-_ECE-GY 6143, Spring 2020_
-
-# Lecture 11: Generalization, Intro to Unsupervised Learning
-
-## Generalization
+# Generalization, Intro to Unsupervised Learning
 
 Modern machine learning models (such as neural nets) typically have lots of parameters. For example, the best architecture as of the end of 2019 for object recognition, measured using the popular ImageNet benchmark dataset, contains *928 million* learnable parameters. This is far greater than the number of training samples (about 14 million).
 
@@ -25,13 +21,17 @@ We had previously introduced *regularizers* as a way to mitigate shortage of tra
 * *Dataset augmentation*: To resolve the imbalance between the number of model parameters and the number of training examples, we can try to increase dataset size. One way to simulate an increased dataset size is by artificially transforming an input training sample (e.g. if we are dealing with images, we can shift, rotate, flip, crop, shear, or distort the training image example) before using it to update the model weights. There are smarter ways of doing dataset augmentation depending on the application, and libraries such as PyTorch have inbuilt routines for doing this.
 
 * *Dropout*: A different way to solve the above imbalance is to simulate a smaller model. This can be (heuristically) achieved via a technique called dropout. The idea is that at the start of each iteration, we introduce stochastic binary variables called *masks* -- $m_i$ -- for each neuron. These random variables are 1 with probability $p$ and 0 with probability $1-p$. Then, in the forward pass, we "drop" individual neurons by masking their activations:
+
 $$
 h_i = m_i \phi(z_i)
 $$
+
 and in the backward pass, we similarly mask the corresponding gradients with $m_i$:
+
 $$
 \partial_{z_i} \mathcal{L} = \partial_{h_i} \mathcal{L} \cdot m_i \cdot \partial_{z_i} \phi (z_i) .
 $$
+
 During test time, all weights are scaled with $p$ in order to match expected values.
 
 * *Transfer learning*: Yet another way to resolve the issue of small training datasets is to *transfer* knowledge from a different learning problem. For example, suppose we are given the task of learning a classifier for medical images (say, CT or X-Ray). Medical images are expensive to obtain, and training very deep neural networks on realistic dataset sizes may be infeasible. However, we could first learn a different neural network for a different task (say, standard object recognition) and *finetune* this network with the given available medical image data. The high level idea is that there may be common learned features across datasets, and we may not depend on re-learning all of them for each new task.
@@ -77,6 +77,7 @@ Suppose a $d$-dimensional dataset (without labels) $\{x_1,x_2,\ldots,x_n\}$ is g
 Imagine stacking up the data points into rows of an $n \times d$ matrix $X$. Our goal is to figure out interesting correlations within the data in an unsupervised manner. For example, if two features were somehow correlated (say the first two co-ordinates of each data point were proportional to each other) then it makes sense to identify such correlations automatically and maybe even discard one of them since there is no new information. From a geometric standpoint, we need to figure out the directions of *variation* in the data.
 
 Mathematically, we can do the same trick that we have been doing before: consider a line represented by a parameter vector $w \in \mathbb{R}^d$ (normalized such that $\|w\| = 1$). In that case, the projections onto each data point have the expression $|\langle x_i, w \rangle |$. Therefore, the sample *variance* of the lengths of the projections is given by:
+
 $$
 \begin{aligned}
 S(w) &= \frac{1}{n} \sum_{i=1}^n |\langle x_i, w \rangle|^2 \\
@@ -84,30 +85,39 @@ S(w) &= \frac{1}{n} \sum_{i=1}^n |\langle x_i, w \rangle|^2 \\
 &= \frac{1}{n} w^T X^T X w .
 \end{aligned}
 $$
+
 We need to figure out the direction $w$ corresponding to maximum variance -- subject to the constraint that $\|w\| = 1$. (The normalizing constraint is important; otherwise, we could arbitrarily scale up any $w$ to get infinitely large $S(w)$.)
 
 One can observe that the quantity
+
 $$
 \frac{1}{n} X^T X = \frac{1}{n} \sum_{i=1}^n x_i x_i^T := \widehat{\Sigma}
 $$
+
 which is a $d \times d$ matrix calleld the empirical *covariance matrix* of the data. So really we are asking for the top eigenvector of the data covariance:
+
 $$
 \widehat{\Sigma} = \sum_{j=1}^d \lambda_j v_j v_j^T .
 $$
+
 Recall that the top eigenvector is just the vector corresponding to the maximum among all the $\lambda_j$, but since the $\lambda_i$ are arranged in decreasing order, the maximum corresponds to $\lambda_1$, and hence the top eigenvector is the vector $w = v_1$. This is called the *first principal component direction* of $X$.
 
 Notice that this direction is a $d$-dimensional vector. We can define the *projection* of the data along with vector; this gives us the first *principal component score* of the data:
+
 $$
 p_1 = X w = X v_1 = \left[ x_1^T v_1; x_2^T v_1; \ldots x_n^T v_1 \right]
 $$
+
 We can iteratively do this for $v_2, v_3, \ldots$ and these give us successive new (orthogonal) principal components of the data.
 
 This gives us a fairly simple way to visualize high dimensional data -- simply compute the first 2 (or 3) principal component scores and plot them! Often, interesting patterns in data which cannot be obviously visualized can be discovered via PCA. PCA is a core routine in most ML software packages, but keep in mind the above principles.
 
 Because of the orthonormality of the principal component directions $(v_1, \ldots, v_n)$, they form a new *basis* for the data points. In other words, each data point can be *reconstructed* as:
+
 $$
 x_i \approx \sum_{j=1}^n p_{ij} v_j = \sum_{j=1}^n \langle x_i, v_j \rangle v_j.
 $$
+
 If we truncate the above basis summation after $k$ terms, then we get a *best-k* term reconstruction of the data (where "best" is measured in terms of explained variance in the data).
 
 
@@ -139,10 +149,13 @@ Some more guidelines on performing PCA:
 
 PCA can be viewed as a very simple form of something called a "linear auto-encoder".
 
-To see why this is the case, consider a data matrix $X$ and perform a PCA decomposition for $k$ components. The principal component scores, $\{Xv_1, Xv_2, \ldots, Xv_k\}$ can be stacked into a $n \times k$ matrix $XW := Z$, where $W = [v_1, \ldots v_k]$ is orthonormal. The calculation of the scores can be viewed as an "encoding" of the data. The best $k$-term reconstruction of $X$ (in terms of explained variance) is given by:
+To see why this is the case, consider a data matrix $X$ and perform a PCA decomposition for $k$ components. The principal component scores, $\{Xv_1, Xv_2, \ldots, Xv_k\}$ can be stacked into a $n \times k$ matrix $XW := Z$, where $W = [v_1, \ldots v_k]$ is orthonormal. The calculation of the scores can be viewed as an "encoding" of the data. The best $k$-term reconstruction
+of $X$ (in terms of explained variance) is given by:
+
 $$
 X^{(k)} = Z W^T = XW W^T .
 $$
+
 This can be viewed as the "decoding" of the data from the PCA scores.
 
 We can view this operation layer-wise as a two-layer neural network (with identity activation functions), where the first layer implements the encoding (multiplication with $W$), and the second layer implements the decoding (multiplication with $W^T). There is weight-sharing going on here, since the first and second layer weight matrices are transposes of each other.
