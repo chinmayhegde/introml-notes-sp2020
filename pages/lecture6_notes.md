@@ -104,10 +104,12 @@ The algorithm makes an update only when a training sample is mislabeled, and hen
 
 For any given dataset and a separator $w$, define the *margin* as the minimum projection distance between any data point to the hyperplane $\langle w,x \rangle = 0$
 i.e.,
+
 $$
 \gamma = \arg \min_{i \in 1,\ldots, n} | \langle w, x_i \rangle | .
 $$
-The optimal separator is defined as the vector $w_*$ that maximizes $\gamma$ over all valid separators. Without loss of generality, assume that the Euclidean norm of $w_*$ is 1 (else, the minimum is not well defined).
+
+The optimal separator is defined as the vector $w_*$ that maximizes $\gamma$ over all valid separators. Without loss of generality, assume that its Euclidean norm is 1 (else, the minimum is not well defined).
 
 We prove that the perceptron will terminate after at most $T = 1/\gamma^2$ updates.
 
@@ -116,6 +118,7 @@ First, consider the quantity $\langle w_t, w_* \rangle$, i.e., the dot-product b
 Therefore, after each update step, $\langle w, w_* \rangle$ increases by at least $\gamma$.
 
 Next, consider the quantity $\|w_t\|^2 = \langle w_{t}, w_{t} \rangle$. After each update, this quantity changes to
+
 $$
 \begin{aligned}
 \| w_{t+1} \|^2 &= \langle w_{t+1}, w_{t+1} \rangle \\
@@ -125,21 +128,29 @@ $$
 & \leq \|w_t \|^2 + 1 ,
 \end{aligned}
 $$
+
 since $y_i$ and $\langle w_t, x_i \rangle$ are of opposite signs (that's the only time we update) and we have assumed that $\|x_i\| \leq 1$ for all $i$.
 
 Putting the two together, we have, after $T$ update steps:
+
 $$
 \langle w_T, w_* \rangle \geq \gamma T
 $$
+
 and
+
 $$
 \|w_T \|^2 \leq T \rightarrow \|w_T\| \leq \sqrt{T} .
 $$
+
 By the Cauchy-Schwartz inequality and the fact that $\|w_*\| = 1$, we know that
+
 $$
 \langle w_T, w_* \rangle \leq \|w_T\| \|w_* \| = \|w_T\|.
 $$
+
 Therefore,
+
 $$
 \gamma T \leq \sqrt{T} \rightarrow T \leq 1/\gamma^2.
 $$
