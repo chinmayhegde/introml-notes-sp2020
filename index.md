@@ -39,4 +39,4 @@ Links to lecture notes:
 
 - [Lecture 13](pages/lecture13_notes.html)
 
-- [Lecture 14](pages/lecture4_notes.html)
+- [Lecture 14](pages/lecture14_notes.html)
