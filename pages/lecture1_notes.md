@@ -1,3 +1,5 @@
+_ECE-GY 6143, Spring 2020_
+
 # Vector representations of data
 
 In several (most?) applications, "data" usually refers to a list of numerical attributes associated with an object of interest.
