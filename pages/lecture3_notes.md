@@ -26,7 +26,7 @@ Computing $X^T X$ takes $O(dn^2)$ time, and inverting it takes $O(d^3)$ time. So
 
 Before we proceed, a quick overview about a *very* important topic in machine learning (and applied real analysis): *convexity*.
 
-![Convexity](./figures/convex.png){:width="50%"}
+![Convexity](./figures/convex.png){:width="75%"}
 
 
 Let $\Omega$ denote any domain (real numbers, $d$-dimensional vector spaces, etc). Consider a function $f : \Omega \rightarrow \mathbb{R}$. Then $f$ is said to be *convex* iff for all pairs of points $x_1, x_2 \in \Omega$, and for all scalars $\alpha \in [0,1]$, we have:
@@ -49,7 +49,7 @@ A direct consequence of the above property is that if the gradient vanishes at a
 
 Therefore, if we have a convex function $f$ and we find a point where its gradient vanishes ($\nabla f(x) = 0$), then we know that we have found a global minimum!
 
-![Taylor approximation of $f$ lies below $f$.](./figures/convex2.png){ width=300px }
+![Taylor approximation of $f$ lies below $f$.](./figures/convex2.png){:width="75%"}
 
 Caveat: not all functions are differentiable. If $f$ is not smooth, then the (partial) derivative is not well-defined at all points. In such cases, we can get analogous properties using something called *sub-gradients* but we will ignore that for now.
 
@@ -147,7 +147,7 @@ $$
 \end{aligned}
 $$
 
-The last inequality follows from bounding the spectral norm of $I - \alpha_k X^X$. The above inequality is nice, since it tells us that the error at iteration $k+1$ is at most $\rho$ times the error at iteration $k$, where:
+The last inequality follows from bounding the spectral norm of $I - \alpha_k X^T X$. The above inequality is nice, since it tells us that the error at iteration $k+1$ is at most $\rho$ times the error at iteration $k$, where:
 
 $$
 \rho = \max( |1-\alpha_k l|, |1 - \alpha_k L|) .
