@@ -4,7 +4,7 @@ _ECE-GY 6143, Spring 2020_
 
 The issue with the logistic and the perceptron classifiers that we have discussed so far is that they are *brittle*, and do not always provide robust separators. For example, if the data is separable, the perceptron returns *a* separator (one among the infinitely many linear separators that exist.) How can we get the *best* separator?
 
-![Existence of multiple separators for a given dataset](figures/separators.png){ width=50% }
+![Existence of multiple separators for a given dataset](figures/separators.png){:width="75%"}
 
 To answer this question, we revisit the perceptron. Recall from previous lecture notes that we presented the perceptron as an *algorithm*. However, we skipped the middle step in any machine learning formulation -- defining the *loss function*. What loss function does the perceptron optimize?
 
@@ -221,7 +221,7 @@ $$
 y = \text{sign}(x_1^2 + x_2^2 - R^2)
 $$
 
-![Examples of nonseparable datasets](figures/nonseparable.png){ width=90% }
+![Examples of nonseparable datasets](figures/nonseparable.png){:"width=90%"}
 
 
 In both cases, no linear separator of the form $y = \text{sign}(w_1 x_1 + w_2 x_2 + b)$ can separate the two classes. The perceptron algorithm would fail on such datasets.
