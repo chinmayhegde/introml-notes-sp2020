@@ -6,11 +6,11 @@ We have already introduced (single- and multi-layer) perceptrons in the previous
 
 The high level idea is to imagine each machine learning model in the form of a computational graph that takes in the data as input and produces the predicted labels as output. For completeness, let us reproduce the graphs for linear- and logistic regression here.
 
-![Linear and logistic regression: a network interpretation](figures/linear-log.png){ width=90% }
+![Linear and logistic regression: a network interpretation](figures/linear-log.png){:width="90%"}
 
 If we do that, we will notice that the graph in the above (linear) models has a natural *feed-forward* structure; these are instances of *directed acyclic graphs*, or DAG. The nodes in this DAG represent inputs and outputs; the edges represents the weights multiplying each input; outputs are calculated by summing up inputs in a weighted manner. The feed-forward structure represents the flow of information during test time; later, we will discuss instances of neural networks (such as *recurrent* neural networks) where there are feedback loops as well, but let us keep things simple here.
 
-![Structure of a deep neural network](figures/nn.png){ width=90% }
+![Structure of a deep neural network](figures/nn.png){:width="90%"}
 
 Let us retain the feed-forward structure, but now extend to a composition of lots of such units. The primitive operation for each "unit", which we will call a *neuron*, will be written in the following functional form:
 
@@ -141,25 +141,27 @@ $$
 
 This sequence of operations can be written in the form of the following computation graph:
 
-![Computation graph for a single neuron and ridge regression](figures/computation-graph.png){ width=90% }
+![Computation graph for a single neuron and ridge regression](figures/computation-graph.png){:width="75%"}
 
 Observe that the computation of the loss $L$ can be implemented via a *forward* pass through this graph. The algorithm is as follows. If a computation graph $G$ has $N$ nodes, let $v_1, \ldots, v_N$ be the outputs of this graph (so that $L = v_N$).
 
-
+---
 function FORWARD():
 
-  0. for $i = 1, 2, \ldots, N$:
+  1. for $i = 1, 2, \ldots, N$:
 
       a. Compute $v_i$ as a function of $\text{Parents}(v_i)$.
-
+---
 
 Now, observe (via the multivariate chain rule) that the gradients of the loss function *with respect to the output at any node* only depends on what variables the node influences (i.e., its *children*). Therefore, the gradient computation can be implemented via a *backward* pass through this graph.
 
+---
 function BACKWARD():
 
-  0. For $i = N-1, \ldots 1$:
+  1. For $i = N-1, \ldots 1$:
 
       a. Compute $$\frac{\partial L}{\partial v_i} = \sum_{j \in \text{Children}(v_i)} \frac{\partial L}{\partial v_j} \frac{\partial v_j}{\partial v_i}$$
+---
 
 Maybe best to explain via example. Let us revisit the above single neuron case, but use the BACKWARD() algorithm to compute gradients of $L$ at each of the 7 variable nodes ($x$ and $y$ are inputs, not variables) in reverse order. Also, to abbreviate notation, let us denote $\partial_x f := \frac{\partial f}{\partial x}$.
 
