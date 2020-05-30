@@ -56,7 +56,7 @@ Let us set $p=2$ (i.e., similar to ridge regression) and plot the iso-contours o
 
 so that we can see that minimum is no longer $1,2$ but gets slightly shifted closer to the origin. This is to be expected since we are penalizing the norm of $w$; but notice that the shape of the contours remains the same. However, if we set $p=1$ (i.e., similar to LASSO) and plot the iso-contours, then we get:
 
-![L1 regularization](./figures/l1reg.png){:"width=75%"}
+![L1 regularization](./figures/l1reg.png){:width="75%"}
 
 Note now that the shape of the contours has changed, and smaller values align magically with the x- and y- axes! This means that the $w$'s corresponding to lower values of $L$ are those which lie on the axes, i.e., whose $y$ or $x$ coordinates correspond to zero. In essence we are encouraging solutions whose coefficients are zeroed out.
 ]
