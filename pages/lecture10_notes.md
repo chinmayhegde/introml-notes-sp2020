@@ -180,3 +180,41 @@ Depending on how we define the structure of the intermediate layers, we get vari
 * Attention networks
 
 and many others. An in-depth discussion of all these networks is unfortunately beyond the scope of this course.
+
+## Generalization in neural nets
+
+Modern machine learning models (such as neural nets) typically have lots of parameters. For example, the best architecture as of the end of 2019 for object recognition, measured using the popular ImageNet benchmark dataset, contains *928 million* learnable parameters. This is far greater than the number of training samples (about 14 million).
+
+This, of course, should be concerning from a *model generalization* standpoint. Recall that we had previously discussed the bias-versus variance issue in ML models. As the number of parameters increases, the bias decreases (because we have more tunable knobs to fit our data), but the variance increases (because there is greater amount of overfitting). We get a curve like this:
+
+![Bias-variance tradeoff](./figures/bias-variance.png){:width="75%"}
+
+The question, then, is how to control the position on this curve so that we hit the sweet spot in the middle?
+
+(It turns out that deep neural nets don't quite obey this curve -- a puzzling phenomenon called "double descent" occurs, but let us not dive too deep into it here; Google it if you are interested.)
+
+We had previously introduced *regularizers* as a way to mitigate shortage of training samples, and in neural nets a broader class of regularization strategies exist. Simple techniques such as adding an extra regularizer do not work in isolation, and a few extra tricks are required. These include:
+
+* *Designing "bottlenecks" in network architecture*: One way to regularize performance is to add a *linear* layer of neurons that is "narrower" than the layer preceding and succeeding it. We will talk about unsupervised learning below, and interpret this in the context of PCA.
+
+* *Early stopping*: We monitor our training and validation error curves during the learning process. We expect training error to (generally) decrease, and validation error to flatten out (or even start increasing). The gap between the two curves indicates generalization performance, and we stop training when this gap is minimized. The problem with this approach is that if we train using *stochastic* methods (such as SGD) the error curves can fluctuate quite a bit and early stopping may lead to sub-optimal results.
+
+* *Weight decay*: This involves adding an L2-regularizer to the standard neural net training loss.
+
+* *Dataset augmentation*: To resolve the imbalance between the number of model parameters and the number of training examples, we can try to increase dataset size. One way to simulate an increased dataset size is by artificially transforming an input training sample (e.g. if we are dealing with images, we can shift, rotate, flip, crop, shear, or distort the training image example) before using it to update the model weights. There are smarter ways of doing dataset augmentation depending on the application, and libraries such as PyTorch have inbuilt routines for doing this.
+
+* *Dropout*: A different way to solve the above imbalance is to simulate a smaller model. This can be (heuristically) achieved via a technique called dropout. The idea is that at the start of each iteration, we introduce stochastic binary variables called *masks* -- $m_i$ -- for each neuron. These random variables are 1 with probability $p$ and 0 with probability $1-p$. Then, in the forward pass, we "drop" individual neurons by masking their activations:
+
+$$
+h_i = m_i \phi(z_i)
+$$
+
+and in the backward pass, we similarly mask the corresponding gradients with $m_i$:
+
+$$
+\partial_{z_i} \mathcal{L} = \partial_{h_i} \mathcal{L} \cdot m_i \cdot \partial_{z_i} \phi (z_i) .
+$$
+
+During test time, all weights are scaled with $p$ in order to match expected values.
+
+* *Transfer learning*: Yet another way to resolve the issue of small training datasets is to *transfer* knowledge from a different learning problem. For example, suppose we are given the task of learning a classifier for medical images (say, CT or X-Ray). Medical images are expensive to obtain, and training very deep neural networks on realistic dataset sizes may be infeasible. However, we could first learn a different neural network for a different task (say, standard object recognition) and *finetune* this network with the given available medical image data. The high level idea is that there may be common learned features across datasets, and we may not depend on re-learning all of them for each new task.
