@@ -52,11 +52,11 @@ where $\alpha$ is a weight parameter (here $\alpha = 6$) and $p$ is either 1 or 
 
 Let us set $p=2$ (i.e., similar to ridge regression) and plot the iso-contours of $L(w)$, i.e., points of the same color represent choices of $w$ that have the same $L$ value:
 
-![L2 regularization](./figures/l2reg.png){ width=45% }
+![L2 regularization](./figures/l2reg.png){:width="75%"}
 
 so that we can see that minimum is no longer $1,2$ but gets slightly shifted closer to the origin. This is to be expected since we are penalizing the norm of $w$; but notice that the shape of the contours remains the same. However, if we set $p=1$ (i.e., similar to LASSO) and plot the iso-contours, then we get:
 
-![L1 regularization](./figures/l1reg.png){ width=45% }
+![L1 regularization](./figures/l1reg.png){:"width=75%"}
 
 Note now that the shape of the contours has changed, and smaller values align magically with the x- and y- axes! This means that the $w$'s corresponding to lower values of $L$ are those which lie on the axes, i.e., whose $y$ or $x$ coordinates correspond to zero. In essence we are encouraging solutions whose coefficients are zeroed out.
 ]
@@ -175,9 +175,9 @@ The lost function is also similar -- we simply generalize the notion of cross-en
 
 $$
 \begin{aligned}
-L(W) &= \sum_{i=1}^n l_i(W)
+L(W) &= \sum_{i=1}^n l_i(W) \\
 &= \sum_{i=1}^n \sum_{k=0}^{K-1} \mathbf{1}\{y^i = k\} \log \frac{\exp(\langle w_k, x_i \rangle)}{Z} ,
 \end{aligned}
 $$
 
-where $\mathbf{1}\{y_i = k\}$ is the *indicator* function which is equal to 1 when the index $k$ corresponds to the class of $y_i$ and zero otherwise. The above loss function $L(W)$ is called the *softmax* loss function, and is commonly used for multi-class classification problems --- not just in logistic regression, but in more complicated supervised learning systems (such as deep networks).
+where $\mathbf{1}\{ y^i = k \}$ is the *indicator* function which is equal to 1 when the index $k$ corresponds to the class of $y_i$ and zero otherwise. The above loss function $L(W)$ is called the *softmax* loss function, and is commonly used for multi-class classification problems --- not just in logistic regression, but in more complicated supervised learning systems (such as deep networks).
