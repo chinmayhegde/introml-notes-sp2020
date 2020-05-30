@@ -145,23 +145,23 @@ This sequence of operations can be written in the form of the following computat
 
 Observe that the computation of the loss $L$ can be implemented via a *forward* pass through this graph. The algorithm is as follows. If a computation graph $G$ has $N$ nodes, let $v_1, \ldots, v_N$ be the outputs of this graph (so that $L = v_N$).
 
----
+
 function FORWARD():
 
   1. for $i = 1, 2, \ldots, N$:
 
       a. Compute $v_i$ as a function of $\text{Parents}(v_i)$.
----
+
 
 Now, observe (via the multivariate chain rule) that the gradients of the loss function *with respect to the output at any node* only depends on what variables the node influences (i.e., its *children*). Therefore, the gradient computation can be implemented via a *backward* pass through this graph.
 
----
+
 function BACKWARD():
 
   1. For $i = N-1, \ldots 1$:
 
       a. Compute $$\frac{\partial L}{\partial v_i} = \sum_{j \in \text{Children}(v_i)} \frac{\partial L}{\partial v_j} \frac{\partial v_j}{\partial v_i}$$
----
+
 
 Maybe best to explain via example. Let us revisit the above single neuron case, but use the BACKWARD() algorithm to compute gradients of $L$ at each of the 7 variable nodes ($x$ and $y$ are inputs, not variables) in reverse order. Also, to abbreviate notation, let us denote $\partial_x f := \frac{\partial f}{\partial x}$.
 
