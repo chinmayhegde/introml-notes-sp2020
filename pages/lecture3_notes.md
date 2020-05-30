@@ -26,7 +26,7 @@ Computing $X^T X$ takes $O(dn^2)$ time, and inverting it takes $O(d^3)$ time. So
 
 Before we proceed, a quick overview about a *very* important topic in machine learning (and applied real analysis): *convexity*.
 
-![Convexity](./figures/convex.png){ width=300px }
+![Convexity](./figures/convex.png){:width="50%"}
 
 
 Let $\Omega$ denote any domain (real numbers, $d$-dimensional vector spaces, etc). Consider a function $f : \Omega \rightarrow \mathbb{R}$. Then $f$ is said to be *convex* iff for all pairs of points $x_1, x_2 \in \Omega$, and for all scalars $\alpha \in [0,1]$, we have:
@@ -132,9 +132,9 @@ $$
 \nabla L(w_1) - \nabla L(w_2) = X^T X (w_1 - w_2) .
 $$
 
-Let all norms below denote the Euclidean norm. Suppose that the optimal $w$ is denoted as $w*$; by definition, the gradient vanishes here and $\nabla L(w*) = 0$. Suppose $l$ and $L$ are the minimum and maximum eigenvalues of $X^T X$. Since $X^T X$ is psd, they both are non-negative.
+Let all norms below denote the Euclidean norm. Suppose that the optimal $w$ is denoted as $ w^* $; by definition, the gradient vanishes here and $\nabla L( w^* ) = 0$. Suppose $l$ and $L$ are the minimum and maximum eigenvalues of $X^T X$. Since $X^T X$ is psd, both $l$ and $L$ are non-negative.
 
-Then, consider the estimation error at iteration $k+1$:
+We can bound the estimation error at iteration $k+1$ as follows:
 
 $$
 \begin{aligned}
@@ -142,12 +142,12 @@ $$
 &= \|w_k - w^* - \alpha_k L(w_k) \| \\
 &= \|w_k - w^* - \alpha_k (L(w_k) - L(w^*))\|~~~~\text{(definition of $w^*$)} \\
 &= \| w_k - w^* - \alpha_k (X^T X (w_k - w^*)) \| \\
-&= \| (I - \alpha_k X^T X) (w_k - w^*) \|~~~~\text{(Fact 1)} \\
+&= \| (I - \alpha_k X^T X) (w_k - w^*) \| .~~~~\text{(Fact 1)} \\
 \|w_{k+1} - w^* \| &\leq \max(|1 - \alpha_k l|,|1 - \alpha_k L|) \|w_k - w^* \| .  
 \end{aligned}
 $$
 
-The above inequality is nice, since it tells us that the error at iteration $k+1$ is at most $\rho$ times the error at iteration $k$, where:
+The last inequality follows from bounding the spectral norm of $I - \alpha_k X^X$. The above inequality is nice, since it tells us that the error at iteration $k+1$ is at most $\rho$ times the error at iteration $k$, where:
 
 $$
 \rho = \max( |1-\alpha_k l|, |1 - \alpha_k L|) .
