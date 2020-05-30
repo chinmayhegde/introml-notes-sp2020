@@ -79,7 +79,7 @@ $$
 
 One might be able to recognize the terms on the right hand side. The denominator is simply the *variance* of $x$ (call it $\sigma_x^2$) while the numerator is the *cross covariance* between $x$ and $y$ (call it $\sigma_{xy}$). It is somewhat natural to expect this kind of behavior: the slope coefficient $w_1$ being the ratio of $\sigma_{xy}$ to $\sigma_x^2$.
 
-There we have it, then. For any new data point $x$, we can compute its predicted value $y$ by simply writing out $\hat{y} = w_0^* + w_1^* x$, where $w_0^*, w_1^*$ have the closed form expressions as above.
+There we have it, then. For any new data point $x$, we can compute its predicted value $y$ by simply writing out $\hat{y} = w_0^* + w_1^* x$, where $ w_0^* , w_1^* $ have the closed form expressions as above.
 
 The minimum MSE can also be computed this way in closed form by plugging in these values of $w_0^*, w_1^*$. We get:
 
