@@ -196,7 +196,7 @@ On the other hand, while training a ($k$-class) logistic regression model (refer
 
 Each of the above procedures can be illustrated as a computational graph as illustrated in Figure 1.
 
-![Linear and logistic regression: a network interpretation](figures/linear-log.png){ width=90% }
+![Linear and logistic regression: a network interpretation](figures/linear-log.png){:width="90%"}
 
 The same steps are used for kernel SVMs (and something very similar for kernel perceptrons):
 
@@ -208,7 +208,7 @@ The same steps are used for kernel SVMs (and something very similar for kernel p
 
 So the computational graph looks something like Figure 2.
 
-![Kernel SVM/perceptron: a network interpretation](figures/kernel-net.png){ width=50% }
+![Kernel SVM/perceptron: a network interpretation](figures/kernel-net.png){:width="90%"}
 
 Now notice the following: we have always used a *user-specified* kernel mapping function $\phi$ (or equivalently, a *user-specifed* kernel dot product $K(\cdot, \cdot)$, such as an RBF.
 
