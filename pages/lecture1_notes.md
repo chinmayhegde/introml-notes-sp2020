@@ -39,7 +39,7 @@ Vector space representations of data are surprisingly general and powerful. More
 
   1. Norms. Each vector can be associated with a *norm*, loosely interpreted as the "length" of a vector. For example, the $\ell_2$, or *Euclidean*, norm of $x = (x_1, \ldots, x_d)$ is given by
 
-  $$||x||^{}_2 = \sqrt{\sum_{i=1}^d x_i^2}$$.
+  $$ \|x\|^{}_2 = \sqrt{\sum_{i=1}^d x_i^2} .$$
 
   On the other hand, the $\ell_1$, or *Manhattan*, norm of $x$ is given by  $\|x\|^{}_1 = \sum_{i=1}^d |x|^{}_i$.
 
