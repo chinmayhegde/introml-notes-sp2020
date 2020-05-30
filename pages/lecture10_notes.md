@@ -6,7 +6,7 @@ Thus far, we have introduced neural networks in a fairly generic manner (layers 
 
 The picture we have for our network looks something like this:
 
-![Structure of a deep neural network](figures/nn.png){ width=60% }
+![Structure of a deep neural network](figures/nn.png){:width="75%"}
 
 There are a few issues with this picture, however.
 
@@ -74,7 +74,7 @@ $$
 
 The corresponding transformation is called *feature map*. The new picture we have for our convolution layer looks something like this:
 
-![Structure of a conv layer](figures/conv-layer.png){ width=60% }
+![Structure of a conv layer](figures/conv-layer.png){:width="75%"}
 
 Observe that this operation can be implemented by matrix multiplication with a set of weights followed by a nonlinear activation function, similar to regular neural networks -- except that there are two differences:
 
@@ -103,7 +103,7 @@ A couple of more practical considerations:
 
 So there you have it: all the ingredients of a convolutional network. One of the first success stories of ConvNets was called *LeNet*, invented by LeCun-Bottou-Bengio-Haffner in 1998, which has the following architecture:
 
-![LeNet-5](figures/lenet.jpg){ width=90% }
+![LeNet-5](figures/lenet.jpg){:width="90%"}
 
 From 1998 to approximately 2015, most of the major advances in object detection were made using a series of successively deeper convolutional networks:
 
@@ -158,7 +158,7 @@ $$
 
 So, historical information is stored in the output of the hidden neurons, across different time steps. We can visualize the flow of information across time by "unrolling" the network across time.
 
-![Structure of RNN](figures/rnn.png){ width=90% }
+![Structure of RNN](figures/rnn.png){:width="90%"}
 
 Observe that the layer weights $U, W, V$ are *constant* over different time steps; they do not vary. Therefore, the RNN can be viewed as a special case of deep neural nets with weight sharing.
 
@@ -170,7 +170,7 @@ Again, training an RNN can be done using the same tools as we have discussed bef
 
 RNNs are very powerful examples of the flexibility of neural nets. Moreover, the above example is for a *single-layer* RNN (which itself -- let us be clear --- is a deep network, if we imagine the RNN to be unrolled over time). We could make it more complex, and define a *multi-layer* RNN by computing the mapping from input to state *itself* via several layers. The equations are messy to write down so let's just draw a picture:
 
-![Multi-layer RNNs](figures/multi-layer-rnn.png){ width=90% }
+![Multi-layer RNNs](figures/multi-layer-rnn.png){:width="90%"}
 
 Depending on how we define the structure of the intermediate layers, we get various flavors of RNNs:
 
