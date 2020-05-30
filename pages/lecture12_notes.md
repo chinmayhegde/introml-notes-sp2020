@@ -160,13 +160,11 @@ This type of *alternating* procedure is sometimes called *Lloyd's algorithm*, wh
 
   1. Initialize cluster centers $\{\mu_1, \mu_2, \ldots \mu_k\} \subset \mathbb{R}^d$.
 
-  2. For each $i$, assign $x_i$ to the nearest cluster center.
+  2. For each $i$, assign $x_i$ to the nearest cluster center. This induces a disjoint partition of the data into subsets $S_1,\ldots,S_k$.
 
       $$
       j^* = \arg \min_{j \in [k]} \|x_i - \mu_j \| .
       $$
-
-    This induces a disjoint partition of the data into subsets $S_1,\ldots,S_k$.
 
   3. For each subset $S_j$, update the cluster centers.
 
