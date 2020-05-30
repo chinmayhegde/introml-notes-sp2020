@@ -12,7 +12,7 @@ Since this is an introductory graduate course on machine learning, we could not 
 * Online learning
 * Semi-supervised learning
 
-among many others. Many of these topics can be found in the recommended textbooks for this course.
+among many others.
 
 Instead, let us wind up with a few emerging topics that are yet to make their way into machine learning textbooks. Many of these topics are critical for practitioners to understand and assess, particularly as machine learning graduates from being a "niche" area only studied by academics to becoming more widely deployed in the real world. Moreover, most of these topics are actively being researched -- and the ML community is still grappling with "what" the right answers are.
 
@@ -39,10 +39,6 @@ Mathematically, this means that the $\text{Loan}$ variable is statistically inde
 This seems intuitive, and many methods for obtaining statistically fair classifiers exist. Unfortunately, statistical parity can be problematic too. (What if $80 \%$ of group A are capable of actually repaying the loan but only $60 \%$ of group B can?) More generally, there are fundamental  
 
 There are other definitions of fairness: equal odds, individual fairness, counterfactual fairness, etc -- but no one definition has emerged as consensus as of yet.
-
-## Robustness and Security
-
-(no notes: refer to the colab exercise for details)
 
 ## ML ethics
 
