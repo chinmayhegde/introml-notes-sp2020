@@ -141,7 +141,7 @@ This gives us a thumb rule to decide which model to select:
 
 This has been classically been cast in terms of the following picture, called the *bias-variance tradeoff curve*:
 
-![Bias-variance tradeoff](./figures/bias-variance.png){ width=75% }
+![Bias-variance tradeoff](./figures/bias-variance.png){:width="75%"}
 
 which we will experimentally demonstrate in class.
 
