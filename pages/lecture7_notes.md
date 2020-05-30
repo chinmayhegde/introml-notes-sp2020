@@ -221,7 +221,7 @@ $$
 y = \text{sign}(x_1^2 + x_2^2 - R^2)
 $$
 
-![Examples of nonseparable datasets](figures/nonseparable.png){:"width=90%"}
+![Examples of nonseparable datasets](figures/nonseparable.png){:width="75%"}
 
 
 In both cases, no linear separator of the form $y = \text{sign}(w_1 x_1 + w_2 x_2 + b)$ can separate the two classes. The perceptron algorithm would fail on such datasets.
