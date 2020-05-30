@@ -13,7 +13,7 @@ For all these reasons, the traditional mode of un/supervised learning does not q
 A quick aside: the above questions are not new, and study of these problems actually classical. The field of control theory is all about solving optimization problems of the above form. But the approaches (and applications) that control theorists study are rather different compared to those that are now popular in machine learning.
 
 
-![Temple Run](./figures/temple.png){ width=25% }
+![Temple Run](./figures/temple.png){:width="25%"}
 
 
 ## Setup
