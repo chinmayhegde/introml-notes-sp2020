@@ -41,7 +41,8 @@ Vector space representations of data are surprisingly general and powerful. More
 
   $$ \|x\|^{}_2 = \sqrt{\sum_{i=1}^d x_i^2} .$$
 
-  On the other hand, the $\ell_1$, or *Manhattan*, norm of $x$ is given by  $\|x\|^{}_1 = \sum_{i=1}^d |x|^{}_i$.
+  On the other hand, the $\ell_1$, or *Manhattan*, norm of $x$ is given by
+  $$ \|x\|^{}_1 = \sum_{i=1}^d |x|^{}_i .$$
 
   2. Distances. Vector spaces can be endowed with a notion of distance as follows: the "distance" between $x$ and $y$ can be interpreted as the norm of the vector $x-y$. For example, the $\ell_2$, or Euclidean, distance between $x$ and $y$ is given by:
 
