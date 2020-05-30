@@ -30,7 +30,7 @@ $$
 
 Several distributions in real life can be modeled as Gaussian mixture models (GMMs). For example, in Yellowstone National Park, the popular geyser "Old Faithful" makes short eruptions *frequently*, or long eruptions *rarely*. The time interval between eruptions is a bimodal distribution with the interval depending on the length of the previous eruption. So here, the class label $C$ denotes whether or not the previous eruption was short or long, and the conditional probability $P(X|C)$ can be approximately modeled as a Gaussian distribution.
 
-![Eruptions of Old Faithful, taken from Wikipedia](./figures/old-faithful.jpg){ width=45% }
+![Eruptions of Old Faithful, taken from Wikipedia](./figures/old-faithful.jpg){:width="75%"}
 
 In unsupervised learning, we do not have access to the class labels. What if we want to *automatically infer* the labels from the data alone? Note also that a priori we do not know a lot of other parameters of the GMM (i.e., we do not also know the means and variances of the component Gaussians, or the class label probabilities $P(C = k)$).
 
@@ -158,23 +158,23 @@ So instead of guessing $S_1,\ldots,S_k$, we will instead *alternate* between est
 
 This type of *alternating* procedure is sometimes called *Lloyd's algorithm*, which was originally proposed for a similar problem in data compression known as *vector quantization*. The full algorithm is as follows.
 
-  0. Initialize cluster centers $\{\mu_1, \mu_2, \ldots \mu_k\} \subset \mathbb{R}^d$.
+  1. Initialize cluster centers $\{\mu_1, \mu_2, \ldots \mu_k\} \subset \mathbb{R}^d$.
 
-  1. For each $i$, assign $x_i$ to the nearest cluster center:
+  2. For each $i$, assign $x_i$ to the nearest cluster center.
 
-    $$
-    j^* = \arg \min_{j \in [k]} \|x_i - \mu_j \| .
-    $$
+      $$
+      j^* = \arg \min_{j \in [k]} \|x_i - \mu_j \| .
+      $$
 
     This induces a disjoint partition of the data into subsets $S_1,\ldots,S_k$.
 
-  2. For each subset $S_j$, update the cluster centers:
+  3. For each subset $S_j$, update the cluster centers.
 
-    $$
-    \mu_j = \frac{1}{|S_j|} \sum_{x_i \in S_j} x_i .
-    $$
+      $$
+      \mu_j = \frac{1}{|S_j|} \sum_{x_i \in S_j} x_i .
+      $$
 
-  3. Go to Step 1; repeat until there is no decrease in clustering objective function $F$.
+  4. Go to Step 1; repeat until there is no decrease in clustering objective function $F$.
 
 ### Initialization
 
