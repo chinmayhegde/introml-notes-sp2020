@@ -28,7 +28,7 @@ $$
 P(X = x) = \sum_{k=1}^K N(x; \mu_k, \sigma_k^2) P(C = k) .
 $$
 
-Several distributions in real life can be modeled as Gaussian mixture models (GMMs). For example, in Yellowstone National Park, the popular geyser "Old Faithful" makes short eruptions *frequently*, or long eruptions *rarely*. The time interval between eruptions is a bimodal distribution with the interval depending on the length of the previous eruption. So here, the class label $C$ denotes whether or not the previous eruption was short or long, and the conditional probability $P(X|C)$ can be approximately modeled as a Gaussian distribution.
+Several distributions in real life can be modeled as Gaussian mixture models (GMMs). For example, in Yellowstone National Park, the popular geyser "Old Faithful" makes short eruptions *frequently*, or long eruptions *rarely*. The time interval between eruptions is a bimodal distribution with the interval depending on the length of the previous eruption. So here, the class label $C$ denotes whether or not the previous eruption was short or long, and the conditional probability can be approximately modeled as a Gaussian distribution.
 
 ![Eruptions of Old Faithful, taken from Wikipedia](./figures/old-faithful.jpg){:width="75%"}
 
