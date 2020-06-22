@@ -12,9 +12,9 @@ Links:
 
 - [Linear Regression](pages/lecture2_notes.html)
 
-- [Gradient Descent](pages/lecture3_notes.html)
+- [Gradient Descent and SGD](pages/lecture3_notes.html)
 
-- [SGD, Model Selection](pages/lecture4_notes.html)
+- [Model Selection](pages/lecture4_notes.html)
 
 - [Logistic Regression](pages/lecture5_notes.html)
 

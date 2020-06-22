@@ -1,6 +1,6 @@
 _ECE-GY 6143_
 
-## Regression Using Gradient Descent
+# Regression Using Gradient Descent
 
 Recall from the previous lecture that we can learn a (multivariate) linear model by minimizing the squared-error loss function:
 
@@ -194,3 +194,85 @@ So, takeaway points:
   $$
 
   which can be much smaller than either $n$ or $d$, depending on how we set $\varepsilon$.
+
+
+Key takeaway points from the discussion above:
+
+  1. Gradient descent converges very quickly to the right answer
+
+  2. provided the step size is chosen correctly; more precisely
+
+  3. the "right" step size is $2/(L+l)$ where $L$ and $l$ are the biggest and smallest eigenvalues of the design matrix $X^T X$.
+
+  4. In practice, one just chooses the step size by hand. In general it shouldn't matter very much as long as it isn't too large (and makes $\rho$ bigger than 1); in this case, the answer will diverge.
+
+  5. Provided convergence occurs, the number of iterations required to push the estimation error below some desired parameter $\varepsilon$ is given by:
+  $$
+  T = \log_{1/\rho} \left( \frac{\|w_0 - w_*\|}{\varepsilon} \right) .
+  $$
+  which can be relatively small, depending on how small we set $\varepsilon$.
+
+  
+## Stochastic Gradient Descent
+
+One issue with gradient descent is the uncomfortable fact that one needs to compute the gradient. Recall that the gradient descent iteration for the least squares loss is given by:
+$$
+w_{k+1} = w_k + \alpha_k \sum_{i=1}^n (y_i - \langle w_k, x_i \rangle) x_i
+$$
+
+So, per iteration:
+
+* One needs to compute the $d$-dimensional dot products
+
+* by sweeping through each one of the $n$ data points in the training data set.
+
+So the running time is $\Omega(nd)$ at the very least. This is OK for datasets that can fit into memory. However, for extremely large datasets, not all the data is in memory, and even computing the gradient once can be a challenge.
+
+A very popular alternative to gradient descent is *stochastic gradient descent* (SGD for short). This method is picking up in popularity since dataset sizes have exponentially grown in the last few years.
+
+The idea in SGD is simple: instead of computing the full gradient involving all the data points, we *approximate* it using a *random* subset, $S$, of data points as follows:
+$$
+w_{k+1} = w_k + \alpha_k' \sum_{i \in S} (y_i - \langle w_k, x_i \rangle) x_i .
+$$
+
+The core idea is that the full gradient can be viewed as a weighted average of the training data points (where the $i^{th}$ weight is given by $y_i - \langle w_k, x_i \rangle$), and therefore one can approximate this average by only considering the average of a *random* subset of the data points.
+
+The interesting part of SGD is that one can take this idea to the extreme, and use a *single* random data point to approximate the whole gradient! This is obviously a very coarse, erroneous approximation of the gradient, but provided we sweep through the data enough number of times the errors will cancel themselves out and eventually we will arrive at the right answer.
+
+Here is the full SGD algorithm.
+
+**Input**: Training samples $S = \{(x_1, y_1), (x_2, y_2), \ldots, (x_n, y_n)\}$.
+
+**Output**: A vector $w$ such that $y_i \approx \langle w,x_i \rangle$ for all $(x_i, y_i) \in S$.
+
+  0. Initialize $w_0 = 0$.
+
+  1. Repeat:
+
+      a. Choose $i \in [1,n]$ uniformly at random, and select $(x_i,y_i)$.
+
+      b. Update:
+      $$
+      w_{k+1} \leftarrow w_k + \alpha_k (y_i - \langle w_k, x_i \rangle) x_i
+      $$
+      and increment $k$.
+
+     While epoch $\leq 1,..,maxepochs$.
+
+
+We won't analyze SGD (bit messy) but will note that the step-size cannot be constant across all iterations (as in full GD). A good choice of decaying step size is the hyperbolic function:
+$$
+\alpha_k = C/k .
+$$
+
+One can see that the per-iteration cost of SGD is only $O(d)$ (assuming that the random selection can be done in unit-time, which is typically true in the case of random access memory). However, there is a commensurate increase in the number of iterations; suppose that after $T$ iterations, the error drops to $\varepsilon$:
+$$
+\|w_T - w^* \| \leq \varepsilon .
+$$
+Then an upper bound on $T$ is given by $O(1/\varepsilon)$.
+
+In comparison with GD (running time of $O(nd \log(1/\varepsilon)$), SGD seems quite a bit faster $O(d/\varepsilon)$; however, if we want $\epsilon$ to be very close to zero (i.e., we seek the best possible model for the data) then the opposite is true.
+
+Of course, keep in mind that obtaining the best possible model fit may not be the best thing to do, since the model could be over-fitted to the training data. So there are both computational as well as statistical reasons why you might want to choose SGD for regression problems.
+
+SGD is very popular, and lots of variants have been proposed. The so-called "mini-batch" SGD trades off between the coarseness/speed of the gradient update in SGD versus the accuracy/slowness of the gradient update in full GD by taking small batches of training samples and computing the gradient on these samples. Other variants include Stochastic Average Gradients (SAG), Stochastic Mirror Descent (SMD), Stochastic Variance Reduced Gradients (SVRG) etc.
