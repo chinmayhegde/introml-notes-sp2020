@@ -1,5 +1,69 @@
 _ECE-GY 6143, Spring 2020_
 
+# Regularization: ridge regression, LASSO
+
+We discussed how to distinguish between different models using the bias-variance curve. This gives us a thumb rule to decide which model to select:
+
+- attempt to decrease bias/underfitting, so want more "complex" $f$
+- attempt to decrease variance/overfitting, so want "simpler" $f$
+
+One technique to define "simple" vs "complex" is to via *regularization*. Instead of minimizing the MSE, we define a *new* loss function that combines both the goodness-of-fit as well as how "complex" the function is. More specifically, we minimize:
+
+$$
+L(w) = MSE(w) + \alpha \phi(w)
+$$
+
+where $\phi(w)$ is a scalar function of $w$ called the *regularizer* and penalizes $w$ that are "unlikely", and $\alpha$ controls the level of regularization.
+
+Common choices of $\phi(w)$ are:
+
+* $\phi(w) = \|w\|^2_2$, the squared $L_2$ norm of $w$.
+* $\phi(w) = \|w\|^{}_1$, the $L_1$ norm of $w$.
+
+We can interpret these regularizers as follows. If we minimize:
+
+$$
+L(w) = \|y - X w\|^2_2 + \alpha \|w\|^2_2,
+$$
+
+this is called *ridge regression*, and the hope is that by constraining the Euclidean norm of $w$, we are encouraging many of the coefficients of $w$ to become small (and hence leading to lesser variance). Using vector calculus, one can show that the (closed form) minimizer can be found as:
+
+$$
+w = (X^T X + \alpha I)^{-1} X^T y .
+$$
+
+but we will skip the details here.
+
+On the other hand, if we minimize:
+
+$$
+L(w) = \|y - X w\|^2_2 + \alpha \|w\|^{}_1
+$$
+
+this is called *LASSO* regression. The interesting feature here is that this constrains many of the coefficients of $w$ to not just become small, but explicit be *zeroed out*. Therefore, the final $w$ we get is typically sparse (i.e., most of the coefficients are zero), and the surviving coefficients that are nonzero indicate the "important" features for that given choice of training dataset and at that regularization level.
+
+[Aside: A common question that is asked is --- what is so special about the $L_1$ norm versus the $L_2$ norm? One can derive it mathematically, but here is a quick visualization in 2D to see what is going on. Consider a simple loss function in $d=2$ dimensions, where the variable is $w = [w_1, w_2]$:
+
+$$
+L(w) = (w_1 - 1)^2 + (w_2 - 2)^2 + \alpha \|w\|^p_p
+$$
+
+where $\alpha$ is a weight parameter (here $\alpha = 6$) and $p$ is either 1 or 2 depending on which regularizer we are using. When $\alpha = 0$, the minimum is attained at the 2D point $w = (1,2)$, and the loss surface looks like a bowl/parabola emerging out of $(1,2)$.
+
+Let us set $p=2$ (i.e., similar to ridge regression) and plot the iso-contours of $L(w)$, i.e., points of the same color represent choices of $w$ that have the same $L$ value:
+
+![L2 regularization](./figures/l2reg.png){:width="75%"}
+
+so that we can see that minimum is no longer $1,2$ but gets slightly shifted closer to the origin. This is to be expected since we are penalizing the norm of $w$; but notice that the shape of the contours remains the same. However, if we set $p=1$ (i.e., similar to LASSO) and plot the iso-contours, then we get:
+
+![L1 regularization](./figures/l1reg.png){:width="75%"}
+
+Note now that the shape of the contours has changed, and smaller values align magically with the x- and y- axes! This means that the $w$'s corresponding to lower values of $L$ are those which lie on the axes, i.e., whose $y$ or $x$ coordinates correspond to zero. In essence we are encouraging solutions whose coefficients are zeroed out.
+]
+
+Unfortunately there is no closed form solution for actually finding the LASSO minimizer, and moreover, gradients don't exist (since the $L_1$ norm is not differentiable)! Therefore, GD/SGD cannot be applied out of the box. However, several algorithms to minimize the loss function exist, including sub-gradient descent, Least angle regression (LARS), ADMM, iterative soft thresholding, etc --- all outside the scope of this class. More to come in later lectures when we discuss SVMs.
+
+
 # Logistic regression
 
 We will now use regression algorithms to solve *classification* problems. We will spend a lot more time on this, but classification can be viewed as a special case of regression where the predicted values are binary class labels -- $\{\pm 1\}$ (or $\{0,1\}$). Indeed, one can solve classification in this manner by simply fitting linear (or nonlinear) regression models to the data points, and rounding off the predicted value to the closest label.
