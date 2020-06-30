@@ -5,13 +5,13 @@ _ECE-GY 6143_
 
 OK, let's hit a slight pause on the algorithms side. We have already seen 3 different algorithms to compute linear models for a given training dataset (matrix inversion, gradient descent, SGD). But why limit ourselves to linear models? Despite the benefits of linearity (easy to interpret, easy to compute, etc.) sometimes they may not always make sense:
 
-* We assumed that the data matrix is *full-rank*, which is necessary if the matrix inverse in linear regression has to exist. This is true in general only when the number of training data points ($n$) is greater than the dimension ($d$). If we have fewer data points than dimensions, the inverse may not exist, and the problem is ill-posed with many competing solutions. In general, having more parameters than training samples is a perilous situation, since *any* dataset can be fit using a linear model. This leads to unnecessarily high *generalization error*, which we discuss below. Therefore, the linear model mau not be the right one to choose.
+* We assumed that the data matrix is *full-rank*, which is necessary if the matrix inverse in linear regression has to exist. This is true in general only when the number of training data points ($n$) is greater than the dimension ($d$). If we have fewer data points than dimensions, the inverse may not exist, and the problem is ill-posed with many competing solutions. In general, having more parameters than training samples is a perilous situation, since *any* dataset can be fit using a linear model. This leads to unnecessarily high *generalization error*, which we discuss below. Therefore, the linear model may not be the right one to choose.
 
 * More generally, we assumed that *all* the data attributes (or features) are meaningful. For example, if we are to predict likelihood of diabetes of an individual from a whole bunch of physiological measurements (height, weight, eye color, blood sugar levels, Sp02, retinal measurements, age, lipid levels, WBC counts, etc.) it is likely that only a *few* attributes actually are useful in making a prediction. The catch, of course, is that a priori we do not know which features are the most important ones. The same with predicting likelihood of an email being spam or not using word counts. While not all words contribute to the "spamminess" of a message, certain special words (which constitute a small subset of the English language) tend to give it away.
 
-* We assumed that the data/labels intrinsically obey a linear relationship. But there is no reason that should be the case! For example, we already saw that in the vehicle mpg example, vehicle weight and mpg are inversely correlated with one another. In general, we need methods to learn more general *nonlinear* relationships in data.
+* We assumed that the data/labels intrinsically obey a linear relationship. But there is no reason that should be the case! In general, we need methods to learn more general *nonlinear* relationships in data.
 
-The last point (nonlinear models) we will deal with when we discuss more sophisticated learning models such as kernel methods and neural nets. But one easy hack is to engineer lots of features from the data: given a data point $x$, we can compute any number of simple transformations ($x^2, x^3, \ldots, x^d, \ldots, 1/x, \ldots, \exp(-x), \ldots$), throw it all into an augmented dataset, and run linear regression on this new data. Of course, we run into the same issue as above: only a small subset of these features will be acutally relevant to our problem, but we don't a priori know which ones they are.
+The last point (nonlinear models) we will deal with when we discuss more sophisticated learning models such as kernel methods and neural nets. But one easy hack is to engineer lots of features from the data: given a data point $x$, we can compute any number of simple transformations ($x^2, x^3, \ldots, x^d, \ldots, 1/x, \ldots, \exp(-x), \ldots$), throw it all into an augmented dataset, and run linear regression on this new data. Of course, we run into the same issue as above: only a small subset of these features will be actually relevant to our problem, but we don't a priori know which ones they are.
 
 Let us tackle the first two aspects first (model selection). Until now, our setting has been the following. Given a training dataset $\{x_i, y_i\}$, fit a function $f$ such that $y_i \approx f(x_i)$. We assume that the data is sampled from a distribution $D$ that obeys an unknown but "true" relationship $y = t(x) + \epsilon$, where $\epsilon$ denotes irremovable i.i.d. zero-mean noise of variance $\sigma^2$.
 
@@ -32,7 +32,7 @@ $$
 \text{Test MSE} &= E_{(x,y)\sim D} (y - f(x))^2 \\
 &= E (t(x) + \epsilon - f(x))^2 \\
 &= E (\epsilon)^2 + E [(t(x) - f(x))^2] \\
-&= \sigma^2 + E((t(x) - f(x))^2) + \text{Var}(t(x) - f(x)) \\
+&= \sigma^2 + E(t(x) - f(x))^2 + \text{Var}(t(x) - f(x)) \\
 &= \sigma^2 + \text{Bias}^2 + \text{Variance}
 \end{aligned}
 $$
